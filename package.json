@@ -1,24 +1,61 @@
 {
-	"name": "obsidian-sample-plugin",
-	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"name": "obsidian-tistory-plugin",
+	"version": "0.0.1",
+	"description": "A plugin for publishing Obsidian documents to Tistory.",
 	"main": "main.js",
+	"author": "anpigon",
+	"license": "MIT",
+	"engines": {
+		"node": ">= 16",
+		"yarn": ">= 1.22",
+		"npm": "please use yarn"
+	},
+	"keywords": [
+		"obsidian",
+		"tistory"
+	],
+	"standard-version": {
+		"t": ""
+	},
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"build": "yarn lint && node esbuild.config.mjs production",
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"format": "prettier --write \"**/*.ts\"",
+		"format:check": "prettier --check \"**/*.ts\"",
+		"lint": "yarn format:check && eslint . --ext .ts && tsc --noEmit -skipLibCheck",
+		"lint:fix": "yarn format && eslint . --ext .ts --fix",
+		"release": "standard-version",
+		"release-test": "standard-version --dry-run",
+		"release-major": "standard-version --release-as major",
+		"release-major-test": "standard-version --dry-run --release-as major",
+		"release-minor": "standard-version --release-as minor",
+		"release-minor-test": "standard-version --dry-run --release-as minor",
+		"prepare": "husky install"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "MIT",
 	"devDependencies": {
+		"@types/marked": "^4.0.7",
 		"@types/node": "^16.11.6",
+		"@types/react": "^18.0.17",
+		"@types/react-dom": "^18.0.6",
+		"@types/styled-components": "^5.1.26",
 		"@typescript-eslint/eslint-plugin": "5.29.0",
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
 		"esbuild": "0.14.47",
+		"eslint": "^8.23.0",
+		"husky": "^8.0.1",
 		"obsidian": "latest",
+		"prettier": "^2.7.1",
+		"standard-version": "^9.5.0",
 		"tslib": "2.4.0",
 		"typescript": "4.7.4"
+	},
+	"dependencies": {
+		"marked": "^4.1.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"rfc4648": "^1.5.2",
+		"styled-components": "^5.3.5"
 	}
 }

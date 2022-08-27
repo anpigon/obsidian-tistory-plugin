@@ -1,0 +1,156 @@
+import { Editor, MarkdownView, Notice, Plugin, stringifyYaml } from 'obsidian';
+
+import { TistoryPluginSettings } from '~/types';
+import TistoryClient from '~/tistory/TistoryClient';
+import { VIEW_TYPE } from '~/ui/TistoryPostsView';
+import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
+import { getTistoryAuthInfo } from '~/helper/storage';
+import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
+import { PostParams, WritePostResponse } from './tistory/types';
+import { PostOptions } from './ui/components/PublicConfirmModalView';
+import { markdownToHtml } from './helper/markdown';
+import TistoryError from './tistory/TistoryError';
+
+export default class TistoryPlugin extends Plugin {
+  settings: TistoryPluginSettings;
+  tistoryClient: TistoryClient;
+  tistoryAccessToken: string | null | undefined;
+
+  async onload() {
+    console.log('Loading Tistory Plugin');
+
+    await this.loadSettings();
+
+    this.addCommand({
+      id: 'tistory-publish',
+      name: 'Publish to Tistory',
+      editorCallback: (editor: Editor, view: MarkdownView) => {
+        this.publishTistory(editor, view);
+      },
+    });
+
+    // This adds a settings tab so the user can configure various aspects of the plugin
+    this.addSettingTab(new TistorySettingTab(this));
+
+    // Register Tistory View
+    // this.registerView(VIEW_TYPE, leaf => new TistoryPostsView(leaf, this));
+
+    // Event Listeners
+    // this.app.workspace.onLayoutReady(async () => {
+    //   // if (this.settings.openViewOnStart) {
+    //   await this.openTistoryLeaf(true);
+    //   // }
+    // });
+
+    this.tistoryAccessToken = getTistoryAuthInfo()?.accessToken;
+    if (this.tistoryAccessToken) {
+      this.tistoryClient = new TistoryClient(this.tistoryAccessToken);
+      // const response = await this.tistoryClient.getBlogs();
+      // console.log(response);
+    }
+  }
+
+  openTistoryLeaf = async (showAfterAttach: boolean) => {
+    const leafs = this.app.workspace.getLeavesOfType(VIEW_TYPE);
+    if (leafs.length == 0) {
+      // Needs to be mounted
+      const leaf = this.app.workspace.getLeftLeaf(false);
+      await leaf.setViewState({ type: VIEW_TYPE });
+      if (showAfterAttach) this.app.workspace.revealLeaf(leaf);
+    } else {
+      // Already mounted - needs to be revealed
+      leafs.forEach(leaf => this.app.workspace.revealLeaf(leaf));
+    }
+  };
+
+  onunload() {}
+
+  async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
+
+  async saveSettings() {
+    await this.saveData(this.settings);
+  }
+
+  async publishTistory(editor: Editor, view: MarkdownView) {
+    try {
+      const activeView = view ?? this.app.workspace.getActiveViewOfType(MarkdownView);
+      if (!activeView) {
+        throw new Error('There is no editor view found.');
+      }
+
+      const fileContent = editor.getValue();
+      const frontMatter = this.app.metadataCache.getFileCache(activeView.file)?.frontmatter;
+      const content = frontMatter
+        ? fileContent
+            .slice(frontMatter.position.end.offset)
+            .replace(/^<!--.*-->$/ms, '')
+            .trim()
+        : fileContent;
+      // console.log('parseYaml', parseYaml(fileContent))
+
+      // TODO: blogName를 프론트메터에서도 가져오기
+      const tistoryAuthInfo = getTistoryAuthInfo();
+      let blogName = tistoryAuthInfo?.selectedBlog ?? '';
+      if (!blogName) {
+        // TODO: blogName가 없으면 다시 조회하여 셋팅
+        blogName = '';
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // const previewEl = (activeView.previewMode as any).renderer.previewEl.children[0] as HTMLDivElement;
+
+      const postOptions = frontMatter as PostOptions;
+      const options = {
+        visibility: postOptions?.visibility,
+        category: postOptions?.category,
+        title: postOptions?.title || activeView.file.basename,
+      } as PostOptions;
+
+      new PublishConfirmModal(this, blogName, options, async result => {
+        const params = {
+          blogName,
+          title: result.title || options.title,
+          visibility: result.visibility || '0',
+          category: result.category || '0',
+          content: markdownToHtml(content),
+          ...(postOptions?.postId && { postId: postOptions.postId }),
+        } as PostParams;
+        console.log(params);
+
+        try {
+          let response: WritePostResponse;
+          if (postOptions?.postId) {
+            // 기존 글 수정
+            response = await this.tistoryClient.modifyPost(params);
+          } else {
+            // 글 새로 등록
+            response = await this.tistoryClient.writePost(params);
+          }
+
+          const newFrontMatter = stringifyYaml({
+            blogName: params.blogName,
+            title: params.title,
+            visibility: params.visibility,
+            category: params.category,
+            postId: response.postId,
+            url: response.url,
+          });
+          const newFileContent = `---\n${newFrontMatter}---\n${content}`;
+          await this.app.vault.modify(activeView.file, newFileContent);
+          new Notice(`티스토리에 글이 발행되었습니다.`);
+        } catch (err) {
+          console.warn(err);
+          if(err instanceof TistoryError && err.message === "게시글 정보가 존재하지 않습니다.") {
+            new Notice(`${err.message}(postId=${postOptions?.postId})`);
+          } else {
+            new Notice((err as Error).toString());
+          }
+        }
+      }).open();
+    } catch (error) {
+      new Notice((error as Error).toString());
+    }
+  }
+}

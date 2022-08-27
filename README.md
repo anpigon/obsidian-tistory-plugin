@@ -1,73 +1,43 @@
-# Obsidian Sample Plugin
+# Obsidian Tistory Plugin (unofficial)
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/anpigon/obsidian-tistory-plugin/Release%20Obsidian%20plugin?style=flat-square&logo=github)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/anpigon/obsidian-tistory-plugin?style=flat-square&sort=semver)
+![GitHub all release Downloads](https://img.shields.io/github/downloads/anpigon/obsidian-tistory-plugin/total?style=flat-square&sort=semver)
+![License](https://img.shields.io/github/license/anpigon/obsidian-tistory-plugin?style=flat-square)
+![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fanpigon%2Fobsidian-tistory-plugin&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true)
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+아직 개발 중인 앱입니다. 버그나 개선사항이 있다면 [Issues](https://github.com/anpigon/obsidian-tistory-plugin/issues)에 남겨주세요.
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+<br>
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+## 설치하기
+- 방법 #1: [OBSIDIAN42 - BRAT](https://obsidian.md/plugins?id=obsidian42-brat)를 사용하여 플러그인을 설치합니다. "Add Beta Plugin"]" 버튼을 눌러 `anpigon/obsidian-tistory-plugin` 를 입력합니다. 
+- 방법 #2: [![GitHub release (latest by SemVer and asset including pre-releases)](https://img.shields.io/github/downloads-pre/anpigon/obsidian-tistory-plugin/latest/main.js?sort=semver)](https://github.com/anpigon/obsidian-tistory-plugin/releases) 최신 릴리스에서 Assets(`main.js`, `manifest.json`, `styles.css`)를 다운로드 합니다. 그리고 옵시디언 볼트의 `.obsidian/plugins` 경로에 `tistory` 폴더를 생성하고 다운로드 받은 파일 3개를 넣어줍니다.
 
-## First time developing plugins?
+<br>
 
-Quick starting guide for new plugin devs:
+## 플러그인 설정하기
+옵시디언 티스토리 플러그인을 사용하기 위해서는 [티스토리 OpenAPI](https://www.tistory.com/guide/api/manage/register) 에서 앱을 생성 해야합니다.
+<img width="609" src="https://user-images.githubusercontent.com/3969643/189274934-5b7be8b7-b6b3-4408-b7b2-d5a0dee8b799.png">
+CallBack에는 반드시 `obsidian://tistory-oauth`를 입력해주세요.
+앱 생성 후 발급받은 App ID와 Secret Key를 옵시디언 티스토리 플러그인에 입력합니다.
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+<br>
 
-## Releasing new releases
+## 사용 방법
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+작성 중...
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+<br>
 
-## Adding your plugin to the community plugin list
+---
 
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+<br>
 
-## How to use
+## 후원하기
 
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
+커피 한 잔의 값으로 개발을 지원할 수 있습니다.
 
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
+<a href="https://anpigon.github.io/buymeacoffee/">[카카오 페이]</a>&nbsp;|&nbsp;<a href="https://anpigon.github.io/buymeacoffee/">[토스 페이]</a>
 
 
-## API Documentation
-
-See https://github.com/obsidianmd/obsidian-api
