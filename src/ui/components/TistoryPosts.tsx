@@ -1,22 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import TistoryPlugin from "TistoryPlugin";
-import { FileView, MarkdownView, Notice, TFile, WorkspaceLeaf } from "obsidian";
+import { Notice, TFile } from "obsidian";
 import React, { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-import { Post, PostDetail } from "~/tistory/TistoryClient";
 import { TistoryPostsView } from "~/ui/TistoryPostsView";
 import useIntersectObserver from "~/ui/hooks/useIntersectObserver";
 import TistoryPostView from "../TistoryPostView";
+import { Post, PostDetail } from "~/tistory/types";
 
-const List = styled.div``;
-const ellipsisMixin = css`
+export const List = styled.div``;
+export const ellipsisMixin = css`
 	width: 100%;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 `;
 
-const ListTile = styled.div`
+export const ListTile = styled.div`
 	&:hover {
 		background-color: var(--background-secondary-alt);
 		color: var(--text-normal);
@@ -179,7 +180,7 @@ interface Props {
 
 const TistoryPosts: React.FC<Props> = (props) => {
 	// --> Main Variables
-	const { tistoryPostsView, plugin } = props;
+	const { plugin } = props;
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isFetching, setIsFetching] = useState<boolean>(true);

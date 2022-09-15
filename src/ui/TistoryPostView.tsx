@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	WorkspaceLeaf,
 	MarkdownView,
@@ -5,8 +7,7 @@ import {
 	TFile,
 	Menu,
 } from "obsidian";
-import { Post, PostDetail } from "~/tistory/TistoryClient";
-
+import { PostDetail } from "~/tistory/types";
 import TistoryPlugin from "~/TistoryPlugin";
 
 export default class TistoryPostView extends MarkdownView {

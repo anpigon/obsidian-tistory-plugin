@@ -142,7 +142,7 @@ export default class TistoryPlugin extends Plugin {
           new Notice(`티스토리에 글이 발행되었습니다.`);
         } catch (err) {
           console.warn(err);
-          if(err instanceof TistoryError && err.message === "게시글 정보가 존재하지 않습니다.") {
+          if (err instanceof TistoryError && err.message === '게시글 정보가 존재하지 않습니다.') {
             new Notice(`${err.message}(postId=${postOptions?.postId})`);
           } else {
             new Notice((err as Error).toString());
