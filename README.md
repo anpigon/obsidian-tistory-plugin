@@ -17,10 +17,12 @@
 <br>
 
 ## 플러그인 설정하기
-옵시디언 티스토리 플러그인을 사용하기 위해서는 [티스토리 OpenAPI](https://www.tistory.com/guide/api/manage/register) 에서 앱을 생성 해야합니다.
-<img width="609" src="https://user-images.githubusercontent.com/3969643/189274934-5b7be8b7-b6b3-4408-b7b2-d5a0dee8b799.png">
-CallBack에는 반드시 `obsidian://tistory-oauth`를 입력해주세요.
-앱 생성 후 발급받은 App ID와 Secret Key를 옵시디언 티스토리 플러그인에 입력합니다.
+옵시디언 티스토 플러그인을 사용하기 위해서는 [티스토리 OpenAPI](https://www.tistory.com/guide/api/manage/register) 에서 앱을 생성 해야합니다.
+
+<img src="https://user-images.githubusercontent.com/3969643/189274934-5b7be8b7-b6b3-4408-b7b2-d5a0dee8b799.png" width="600">
+
+CallBack에는 반드시 `obsidian://tistory-oauth`를 입력해주세요.<br>
+앱 생성 후 발급받은 `App ID`와 `Secret Key`를 옵시디언 티스토리 플러그인에 입력합니다.
 
 <br>
 
@@ -38,6 +40,6 @@ CallBack에는 반드시 `obsidian://tistory-oauth`를 입력해주세요.
 
 커피 한 잔의 값으로 개발을 지원할 수 있습니다.
 
-<a href="https://anpigon.github.io/buymeacoffee/">[카카오 페이]</a>&nbsp;|&nbsp;<a href="https://anpigon.github.io/buymeacoffee/">[토스 페이]</a>
+<a href="https://anpigon.github.io/buymeacoffee/">카카오 페이</a>
 
 
