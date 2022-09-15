@@ -129,15 +129,16 @@ export default class TistoryPlugin extends Plugin {
             response = await this.tistoryClient.writePost(params);
           }
 
-          const newFrontMatter = stringifyYaml({
+          const newFrontMatter = {
+            ...frontMatter,
             blogName: params.blogName,
             title: params.title,
             visibility: params.visibility,
             category: params.category,
             postId: response.postId,
             url: response.url,
-          });
-          const newFileContent = `---\n${newFrontMatter}---\n${content}`;
+          };
+          const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---\n${content}`;
           await this.app.vault.modify(activeView.file, newFileContent);
           new Notice(`티스토리에 글이 발행되었습니다.`);
         } catch (err) {
