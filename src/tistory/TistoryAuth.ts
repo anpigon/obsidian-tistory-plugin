@@ -1,5 +1,5 @@
-import { request } from "obsidian";
-import { TISTORY_REDIRECT_URI } from "~/constants";
+import { request } from 'obsidian';
+import { TISTORY_REDIRECT_URI } from '~/constants';
 
 const TISTORY_AUTH_BASE_URL = 'https://www.tistory.com/oauth';
 
@@ -14,7 +14,6 @@ export function createTistoryAuthUrl({
 }) {
   return `${TISTORY_AUTH_BASE_URL}/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
 }
-
 
 export async function requestTistoryAccessToken({
   code,
