@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import TistoryPlugin from 'TistoryPlugin';
 import { Notice, TFile } from 'obsidian';
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 
+import TistoryPlugin from '~/TistoryPlugin';
 import { TistoryPostsView } from '~/ui/TistoryPostsView';
 import useIntersectObserver from '~/ui/hooks/useIntersectObserver';
 import TistoryPostView from '../TistoryPostView';
@@ -172,7 +172,7 @@ interface Props {
   plugin: TistoryPlugin;
 }
 
-const TistoryPosts: React.FC<Props> = props => {
+const TistoryPosts: React.FC<Props> = (props) => {
   // --> Main Variables
   const { plugin } = props;
 
@@ -197,7 +197,7 @@ const TistoryPosts: React.FC<Props> = props => {
           const currentTotalCount = posts.length + response.posts.length;
           currentPage.current = parseInt(response.page, 10);
           setHasNextPage(currentTotalCount < totalCount);
-          setPosts(prev => {
+          setPosts((prev) => {
             return [...prev, ...response.posts];
           });
         }
@@ -227,7 +227,7 @@ const TistoryPosts: React.FC<Props> = props => {
 
   return (
     <React.Fragment>
-      {posts.map(item => (
+      {posts.map((item) => (
         <NavFile key={item.id} title={item.title} onClick={() => handleClick(item.id)} />
       ))}
       <div className="scrollingObserver" ref={ref} />
