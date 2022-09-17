@@ -4,7 +4,7 @@ import { TistoryPluginSettings } from '~/types';
 import TistoryClient from '~/tistory/TistoryClient';
 import { VIEW_TYPE } from '~/ui/TistoryPostsView';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
-import { getTistoryAuthInfo } from '~/helper/storage';
+import { loadTistoryAuthInfo } from '~/helper/storage';
 import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
 import { PostParams, WritePostResponse } from './tistory/types';
 import { PostOptions } from './ui/components/PublicConfirmModalView';
@@ -55,7 +55,7 @@ export default class TistoryPlugin extends Plugin {
     //   // }
     // });
 
-    this.createTistoryClient(getTistoryAuthInfo()?.accessToken);
+    this.createTistoryClient(loadTistoryAuthInfo()?.accessToken);
   }
 
   openTistoryLeaf = async (showAfterAttach: boolean) => {
@@ -101,10 +101,10 @@ export default class TistoryPlugin extends Plugin {
             .replace(/^<!--.*-->$/ms, '')
             .trim()
         : fileContent;
-      // console.log('parseYaml', parseYaml(fileContent))
+      // console.log('parseYaml', parseYaml(fileContent));
 
       // TODO: blogName를 프론트메터에서도 가져오기
-      const tistoryAuthInfo = getTistoryAuthInfo();
+      const tistoryAuthInfo = loadTistoryAuthInfo();
       let blogName = tistoryAuthInfo?.selectedBlog ?? '';
       if (!blogName) {
         // TODO: blogName가 없으면 다시 조회하여 셋팅

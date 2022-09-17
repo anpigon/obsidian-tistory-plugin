@@ -8,7 +8,7 @@ import TistoryAuthModal from './components/TistoryAuthModal';
 import SettingForm from './components/SettingForm';
 import { AuthType, TistoryPluginSettings } from '~/types';
 import { decrypt } from '~/helper/encrypt';
-import { getTistoryAuthInfo, setTistoryAuthInfo } from '~/helper/storage';
+import { saveTistoryAuthInfo } from '~/helper/storage';
 import { requestTistoryAccessToken, createTistoryAuthUrl } from '~/tistory';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {
@@ -36,7 +36,7 @@ export default class TistorySettingTab extends PluginSettingTab {
         // 오류가 발생한 경우 HTTP 오류 응답과 함께 오류 메시지가 응답값으로 옵니다.
         // error={error}&error_description={error-description}
         console.warn(params);
-        this.handleTistoryAuthModalClose();
+        this.handleTistoryAuthModalClose(false);
         const errorMessage = params.error_description?.replace(/_/g, ' ') ?? params.error;
         new Notice(`Authentication failed with error:\n${errorMessage}`);
         return;
@@ -44,7 +44,7 @@ export default class TistorySettingTab extends PluginSettingTab {
 
       const { code, state } = params;
       if (state !== this.state) {
-        this.handleTistoryAuthModalClose();
+        this.handleTistoryAuthModalClose(false);
         new Notice('Authentication failed with error: bad request');
         return;
       }
@@ -69,12 +69,12 @@ export default class TistorySettingTab extends PluginSettingTab {
       });
 
       // 토큰값 저장
-      setTistoryAuthInfo({
+      saveTistoryAuthInfo({
         accessToken,
-        selectedBlog: null,
+        selectedBlog: '',
       });
 
-      this.handleTistoryAuthModalClose();
+      this.handleTistoryAuthModalClose(true);
 
       this.plugin.createTistoryClient(accessToken);
     }
@@ -89,21 +89,21 @@ export default class TistorySettingTab extends PluginSettingTab {
   }
 
   // 티스토리 인증 요청 모달팝업 오픈
-  handleTistoryAuthModalOpen(authCallback?: (ok: boolean) => void) {
+  handleTistoryAuthModalOpen(callback?: (ok: boolean) => void) {
     const state = (this.state = Date.now().toString(36));
     const clientId = this.getClientId();
     const authLink = createTistoryAuthUrl({ clientId, state });
 
     this.authModal = new TistoryAuthModal(this.plugin.app, authLink, async () => {
       // 모달 팝업이 닫히면 인증 성공 여부를 콜백 함수로 전달
-      const isLogged = Boolean(getTistoryAuthInfo()?.accessToken);
-      authCallback?.(isLogged);
+      callback?.(Boolean(this.authModal?.isSuccess));
     });
     this.authModal.open();
   }
 
-  handleTistoryAuthModalClose() {
+  handleTistoryAuthModalClose(isSuccess: boolean) {
     if (this.authModal) {
+      this.authModal.isSuccess = isSuccess;
       this.authModal.close();
       this.authModal = undefined;
     }
@@ -118,7 +118,7 @@ export default class TistorySettingTab extends PluginSettingTab {
     }
 
     this.#root.render(
-      <SettingForm plugin={this.plugin} onAuth={authCallback => this.handleTistoryAuthModalOpen(authCallback)} />,
+      <SettingForm plugin={this.plugin} onAuth={callback => this.handleTistoryAuthModalOpen(callback)} />,
     );
   }
 }

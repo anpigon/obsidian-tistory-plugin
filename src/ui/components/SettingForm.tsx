@@ -6,12 +6,12 @@ import { encrypt } from '~/helper/encrypt';
 import TistoryPlugin from '~/TistoryPlugin';
 import SettingItem from './SettingItem';
 import TistoryClient from '~/tistory/TistoryClient';
-import { clearTistoryAuthInfo, getTistoryAuthInfo, updateTistoryAuthInfo } from '~/helper/storage';
+import { clearTistoryAuthInfo, loadTistoryAuthInfo, updateTistoryAuthInfo } from '~/helper/storage';
 import { Blog } from '~/tistory/types';
 
 type Props = {
   plugin: TistoryPlugin;
-  onAuth(authCallback?: (ok: boolean) => void): void;
+  onAuth(callback: (ok: boolean) => void): void;
 };
 
 const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
@@ -39,8 +39,6 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   const handleChangeAppId: ChangeEventHandler<HTMLInputElement> = event => {
     const newValue = event.target.value;
     setAppId(newValue);
-    // handleValidate();
-
     settings.appId = newValue;
     plugin.saveSettings();
   };
@@ -48,8 +46,6 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   const handleChangeSecretKey: ChangeEventHandler<HTMLInputElement> = useCallback(async event => {
     const newValue = event.target.value;
     setSecretKey(newValue);
-    // handleValidate();
-
     settings.secretKey = newValue.length === 72 ? await encrypt(newValue, ENCRYPTED_PASSWORD) : newValue;
     plugin.saveSettings();
   }, []);
@@ -73,8 +69,8 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
 
   const handleLogin = () => {
     // 인증을 시도하고 인증 성공 여부을 콜백 함수로 받는다.
-    onAuth(async result => {
-      setIsLogged(result);
+    onAuth(isSuccess => {
+      setIsLogged(isSuccess);
     });
   };
 
@@ -84,13 +80,17 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   };
 
   const loadAuthInfo = async () => {
-    const accessInfo = getTistoryAuthInfo();
+    const accessInfo = loadTistoryAuthInfo();
     // TODO: 인증 실패하면 에러 메시지 출력후 재로그인 팝업 노출하기
     if (accessInfo?.accessToken) {
       const client = new TistoryClient(accessInfo?.accessToken);
       const { blogs } = await client.getBlogs();
       setBlogs(blogs);
       setSelectedBlog(accessInfo?.selectedBlog || blogs[0].name);
+
+      if (!accessInfo.selectedBlog) {
+        updateTistoryAuthInfo({ selectedBlog: blogs[0].name });
+      }
     }
   };
 
