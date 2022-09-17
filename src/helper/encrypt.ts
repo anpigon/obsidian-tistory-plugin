@@ -7,7 +7,7 @@ export const bufferToArrayBuffer = (b: Buffer | Uint8Array | ArrayBufferView) =>
 };
 
 export const hexStringToTypedArray = (hex: string) => {
-  return new Uint8Array(hex.match(/[\da-f]{2}/gi)?.map(h => parseInt(h, 16)) ?? []);
+  return new Uint8Array(hex.match(/[\da-f]{2}/gi)?.map((h) => parseInt(h, 16)) ?? []);
 };
 
 const getKeyIVFromPassword = async (salt: Uint8Array, password: string, rounds: number = DEFAULT_ITER) => {

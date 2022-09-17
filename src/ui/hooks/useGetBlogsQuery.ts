@@ -18,7 +18,7 @@ export default function useGetBlogsQuery() {
           setData(blogs);
           setIsLoading(false);
         })
-        .catch(err => setError(err));
+        .catch((err) => setError(err));
     }
   }, []);
 

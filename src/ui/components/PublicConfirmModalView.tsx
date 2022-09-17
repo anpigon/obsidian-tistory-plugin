@@ -13,7 +13,7 @@ type Props = PropsWithChildren<{
   onPublish(result: PostOptions): void;
 }>;
 
-const PublicConfirmModalView: React.FC<Props> = props => {
+const PublicConfirmModalView: React.FC<Props> = (props) => {
   const { plugin, blogName, options, onClose, onPublish } = props;
   const { tistoryClient } = plugin;
 
@@ -85,7 +85,7 @@ const PublicConfirmModalView: React.FC<Props> = props => {
           value={String(category)}
         >
           <option value="0">카테고리 없음</option>
-          {categories.map(cate => {
+          {categories.map((cate) => {
             return (
               <option key={cate.id} value={cate.id}>
                 {cate.label}

@@ -67,7 +67,7 @@ export default class TistoryPlugin extends Plugin {
       if (showAfterAttach) this.app.workspace.revealLeaf(leaf);
     } else {
       // Already mounted - needs to be revealed
-      leafs.forEach(leaf => this.app.workspace.revealLeaf(leaf));
+      leafs.forEach((leaf) => this.app.workspace.revealLeaf(leaf));
     }
   };
 
@@ -119,7 +119,7 @@ export default class TistoryPlugin extends Plugin {
         title: postOptions?.title || activeView.file.basename,
       } as PostOptions;
 
-      new PublishConfirmModal(this, blogName, options, async result => {
+      new PublishConfirmModal(this, blogName, options, async (result) => {
         const params = {
           blogName,
           title: result.title || options.title,
