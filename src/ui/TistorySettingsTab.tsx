@@ -34,12 +34,16 @@ export default class TistorySettingTab extends PluginSettingTab {
       if (params.error) {
         // 오류가 발생한 경우 HTTP 오류 응답과 함께 오류 메시지가 응답값으로 옵니다.
         // error={error}&error_description={error-description}
-        new Notice(`Authentication failed with error: ${params.error}`);
+        console.warn(params);
+        this.handleTistoryAuthModalClose();
+        const errorMessage = params.error_description?.replace(/_/g, ' ') ?? params.error;
+        new Notice(`Authentication failed with error:\n${errorMessage}`);
         return;
       }
 
       const { code, state } = params;
       if (state !== this.state) {
+        this.handleTistoryAuthModalClose();
         new Notice('Authentication failed with error: bad request');
         return;
       }
