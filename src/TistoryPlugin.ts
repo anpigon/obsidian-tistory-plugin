@@ -1,4 +1,4 @@
-import { Editor, MarkdownView, Notice, Plugin, stringifyYaml } from 'obsidian';
+import { MarkdownView, Notice, Plugin, stringifyYaml } from 'obsidian';
 
 import { TistoryPluginSettings } from '~/types';
 import TistoryClient from '~/tistory/TistoryClient';
