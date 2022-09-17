@@ -163,6 +163,18 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
         </>
       )}
 
+      {!isLogged && (
+        <SettingItem
+          name="티스토리 인증"
+          description="인증하기 버튼을 눌러 티스토리 인증을 해주세요."
+          error={disabledAuthButton && 'App ID와 Secret Key를 입력해주세요.'}
+        >
+          <button onClick={handleLogin} disabled={disabledAuthButton}>
+            인증하기
+          </button>
+        </SettingItem>
+      )}
+
       {isLogged && (
         <>
           <SettingItem name="티스토리 인증" description="인증을 해제하려면 로그아웃 버튼을 눌러주세요">
@@ -188,18 +200,6 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
             </select>
           </SettingItem>
         </>
-      )}
-
-      {!isLogged && (
-        <SettingItem
-          name="티스토리 인증"
-          description="인증하기 버튼을 눌러 티스토리 인증을 해주세요."
-          error={disabledAuthButton && 'App ID와 Secret Key를 입력해주세요.'}
-        >
-          <button onClick={handleLogin} disabled={disabledAuthButton}>
-            인증하기
-          </button>
-        </SettingItem>
       )}
     </div>
   );
