@@ -39,38 +39,37 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   const handleChangeAppId: ChangeEventHandler<HTMLInputElement> = event => {
     const newValue = event.target.value;
     setAppId(newValue);
-    if (newValue.length === 32) {
-      settings.appId = newValue;
-      plugin.saveSettings();
-      setFormError(prev => ({
-        ...prev,
-        appId: '',
-      }));
-    } else {
-      setFormError(prev => ({
-        ...prev,
-        appId: '올바른 App ID를 입력해주세요.',
-      }));
-    }
+    // handleValidate();
+
+    settings.appId = newValue;
+    plugin.saveSettings();
   };
 
   const handleChangeSecretKey: ChangeEventHandler<HTMLInputElement> = useCallback(async event => {
     const newValue = event.target.value;
     setSecretKey(newValue);
-    if (newValue.length === 72) {
-      settings.secretKey = await encrypt(newValue, ENCRYPTED_PASSWORD);
-      plugin.saveSettings();
-      setFormError(prev => ({
-        ...prev,
-        secretKey: '',
-      }));
-    } else {
-      setFormError(prev => ({
-        ...prev,
-        secretKey: '올바른 Secret Key를 입력해주세요.',
-      }));
-    }
+    // handleValidate();
+
+    settings.secretKey = newValue.length === 72 ? await encrypt(newValue, ENCRYPTED_PASSWORD) : newValue;
+    plugin.saveSettings();
   }, []);
+
+  const isAppId = (value: string) => {
+    return value.length === 32;
+  };
+  const isValidateSecretKey = (value: string) => {
+    return value.length === 72 || value.length === 128;
+  };
+  const handleValidate = () => {
+    const _isAppId = isAppId(appId);
+    const _isValidateSecretKey = isValidateSecretKey(secretKey);
+    setFormError(prev => ({
+      ...prev,
+      appId: (appId || formError.appId) && !_isAppId ? '올바른 App ID를 입력해주세요.' : '',
+      secretKey: (secretKey || formError.secretKey) && !_isValidateSecretKey ? '올바른 Secret Key를 입력해주세요.' : '',
+    }));
+    return _isAppId && _isValidateSecretKey;
+  };
 
   const handleLogin = () => {
     // 인증을 시도하고 인증 성공 여부을 콜백 함수로 받는다.
@@ -83,14 +82,6 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
     clearTistoryAuthInfo();
     setIsLogged(false);
   };
-
-  useEffect(() => {
-    if (authType === AuthType.USE_MY_TISTORY_APP && appId.length !== 32 && secretKey.length !== 72) {
-      setDisabledAuthButton(true);
-    } else {
-      setDisabledAuthButton(false);
-    }
-  }, [authType, appId, secretKey]);
 
   const loadAuthInfo = async () => {
     const accessInfo = getTistoryAuthInfo();
@@ -108,6 +99,14 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
       loadAuthInfo();
     }
   }, [isLogged]);
+
+  useEffect(() => {
+    if (authType === AuthType.USE_MY_TISTORY_APP) {
+      setDisabledAuthButton(!handleValidate());
+    } else {
+      setDisabledAuthButton(false);
+    }
+  }, [authType, appId, secretKey]);
 
   const handleChangeBlog: ChangeEventHandler<HTMLSelectElement> = event => {
     const value = event.target.value;
@@ -192,7 +191,11 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
       )}
 
       {!isLogged && (
-        <SettingItem name="티스토리 인증" description="인증하기 버튼을 눌러 티스토리 인증을 해주세요.">
+        <SettingItem
+          name="티스토리 인증"
+          description="인증하기 버튼을 눌러 티스토리 인증을 해주세요."
+          error={disabledAuthButton && 'App ID와 Secret Key를 입력해주세요.'}
+        >
           <button onClick={handleLogin} disabled={disabledAuthButton}>
             인증하기
           </button>
