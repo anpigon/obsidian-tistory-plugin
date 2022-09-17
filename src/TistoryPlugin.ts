@@ -10,6 +10,7 @@ import { PostParams, WritePostResponse } from './tistory/types';
 import { PostOptions } from './ui/components/PublicConfirmModalView';
 import { markdownToHtml } from './helper/markdown';
 import TistoryError from './tistory/TistoryError';
+import { stripContent } from './helper/utils';
 
 export default class TistoryPlugin extends Plugin {
   #settings: TistoryPluginSettings;
@@ -101,14 +102,9 @@ export default class TistoryPlugin extends Plugin {
 
     try {
       const frontMatter = { ...this.app.metadataCache.getFileCache(activeView.file)?.frontmatter };
-      const content = fileContent
-        .slice(frontMatter.position?.end.offset ?? 0)
-        .replace(/^<!--[^>]*-->$/gms, '')
-        .replace(/^%%[^%]*%%$/gms, '')
-        .trim();
+      const content = fileContent.slice(frontMatter.position?.end.offset ?? 0).trim();
       delete frontMatter.position;
 
-      console.log(content);
       const tistoryAuthInfo = loadTistoryAuthInfo();
       const postOptions = frontMatter as PostOptions;
       const blogName = postOptions?.blogName || tistoryAuthInfo?.selectedBlog || '';
@@ -124,9 +120,10 @@ export default class TistoryPlugin extends Plugin {
           title: result.title || options.title,
           visibility: result.visibility || '0',
           category: result.category || '0',
-          content: markdownToHtml(content),
+          content: markdownToHtml(stripContent(content)),
           ...(postOptions?.postId && { postId: postOptions.postId }),
         } as PostParams;
+        console.log(params);
 
         try {
           let response: WritePostResponse;
