@@ -1,6 +1,6 @@
 import React from 'react';
 import { Notice, PluginSettingTab } from 'obsidian';
-import { createRoot } from 'react-dom/client';
+import { createRoot, Root } from 'react-dom/client';
 
 import TistoryPlugin from '~/TistoryPlugin';
 import { ENCRYPTED_PASSWORD, TISTORY_CLIENT_ID } from '~/constants';
@@ -18,6 +18,7 @@ export const DEFAULT_SETTINGS: TistoryPluginSettings = {
 };
 
 export default class TistorySettingTab extends PluginSettingTab {
+  #root: Root | null;
   authModal?: TistoryAuthModal;
   state: string;
 
@@ -110,10 +111,13 @@ export default class TistorySettingTab extends PluginSettingTab {
 
   display(): void {
     const { containerEl } = this;
-    containerEl.empty();
 
-    const root = createRoot(containerEl);
-    root.render(
+    if (!this.#root) {
+      containerEl.empty();
+      this.#root = createRoot(containerEl);
+    }
+
+    this.#root.render(
       <SettingForm plugin={this.plugin} onAuth={authCallback => this.handleTistoryAuthModalOpen(authCallback)} />,
     );
   }
