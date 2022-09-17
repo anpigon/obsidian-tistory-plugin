@@ -12,9 +12,22 @@ import { markdownToHtml } from './helper/markdown';
 import TistoryError from './tistory/TistoryError';
 
 export default class TistoryPlugin extends Plugin {
-  settings: TistoryPluginSettings;
-  tistoryClient: TistoryClient;
-  tistoryAccessToken: string | null | undefined;
+  #settings: TistoryPluginSettings;
+  #tistoryClient: TistoryClient;
+
+  get settings() {
+    return this.#settings;
+  }
+
+  get tistoryClient() {
+    return this.#tistoryClient;
+  }
+
+  createTistoryClient(accessToken: string | null | undefined) {
+    if (accessToken) {
+      this.#tistoryClient = new TistoryClient(accessToken);
+    }
+  }
 
   async onload() {
     console.log('Loading Tistory Plugin');
@@ -42,12 +55,7 @@ export default class TistoryPlugin extends Plugin {
     //   // }
     // });
 
-    this.tistoryAccessToken = getTistoryAuthInfo()?.accessToken;
-    if (this.tistoryAccessToken) {
-      this.tistoryClient = new TistoryClient(this.tistoryAccessToken);
-      // const response = await this.tistoryClient.getBlogs();
-      // console.log(response);
-    }
+    this.createTistoryClient(getTistoryAuthInfo()?.accessToken);
   }
 
   openTistoryLeaf = async (showAfterAttach: boolean) => {
@@ -66,15 +74,15 @@ export default class TistoryPlugin extends Plugin {
   onunload() {}
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.#settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
 
   async saveSettings() {
-    await this.saveData(this.settings);
+    await this.saveData(this.#settings);
   }
 
   async publishTistory(editor: Editor, view: MarkdownView) {
-    if (!this.tistoryClient) {
+    if (!this.#tistoryClient) {
       new Notice('티스토리 인증이 필요합니다.');
       return;
     }
@@ -128,10 +136,10 @@ export default class TistoryPlugin extends Plugin {
           let response: WritePostResponse;
           if (postOptions?.postId) {
             // 기존 글 수정
-            response = await this.tistoryClient.modifyPost(params);
+            response = await this.#tistoryClient.modifyPost(params);
           } else {
             // 글 새로 등록
-            response = await this.tistoryClient.writePost(params);
+            response = await this.#tistoryClient.writePost(params);
           }
 
           const newFrontMatter = {

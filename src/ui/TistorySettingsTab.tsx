@@ -75,7 +75,7 @@ export default class TistorySettingTab extends PluginSettingTab {
 
       this.handleTistoryAuthModalClose();
 
-      // TODO: 인증 완료되면 플러그인 새로 고침
+      this.plugin.createTistoryClient(accessToken);
     }
   }
 

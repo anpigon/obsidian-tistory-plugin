@@ -7,7 +7,7 @@ import PublicConfirmModalView, { PostOptions } from './components/PublicConfirmM
 import { PluginProvider } from './context';
 
 export class PublishConfirmModal extends Modal {
-  root: Root | null;
+  #root: Root | null;
 
   constructor(
     private readonly plugin: TistoryPlugin,
@@ -29,8 +29,10 @@ export class PublishConfirmModal extends Modal {
 
     titleEl.createEl('h2', { text: '티스토리 글 발행' });
 
-    this.root = createRoot(contentEl);
-    this.root.render(
+    if (!this.#root) {
+      this.#root = createRoot(contentEl);
+    }
+    this.#root.render(
       <PluginProvider.Provider value={{ plugin: this.plugin }}>
         <PublicConfirmModalView
           plugin={this.plugin}
@@ -45,8 +47,8 @@ export class PublishConfirmModal extends Modal {
 
   onClose() {
     const { contentEl } = this;
-    this.root?.unmount();
-    this.root = null;
+    this.#root?.unmount();
+    this.#root = null;
     contentEl.empty();
   }
 }
