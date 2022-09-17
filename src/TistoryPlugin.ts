@@ -74,6 +74,11 @@ export default class TistoryPlugin extends Plugin {
   }
 
   async publishTistory(editor: Editor, view: MarkdownView) {
+    if (!this.tistoryClient) {
+      new Notice('티스토리 인증이 필요합니다.');
+      return;
+    }
+
     try {
       const activeView = view ?? this.app.workspace.getActiveViewOfType(MarkdownView);
       if (!activeView) {
