@@ -37,8 +37,8 @@ export default class TistoryPlugin extends Plugin {
     this.addCommand({
       id: 'tistory-publish',
       name: 'Publish to Tistory',
-      editorCallback: (editor: Editor, view: MarkdownView) => {
-        this.publishTistory(editor, view);
+      callback: () => {
+        this.publishTistory();
       },
     });
 
@@ -81,19 +81,25 @@ export default class TistoryPlugin extends Plugin {
     await this.saveData(this.#settings);
   }
 
-  async publishTistory(editor: Editor, view: MarkdownView) {
+  async publishTistory() {
     if (!this.#tistoryClient) {
       new Notice('티스토리 인증이 필요합니다.');
       return;
     }
 
-    try {
-      const activeView = view ?? this.app.workspace.getActiveViewOfType(MarkdownView);
-      if (!activeView) {
-        throw new Error('There is no editor view found.');
-      }
+    const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (!activeView) {
+      new Notice('열려있는 노트가 없습니다.');
+      return;
+    }
 
-      const fileContent = editor.getValue();
+    const fileContent = await app.vault.cachedRead(activeView.file);
+    if (fileContent !== activeView.data) {
+      new Notice('파일을 저장하고 다시 시도해주세요.');
+      return;
+    }
+
+    try {
       const frontMatter = this.app.metadataCache.getFileCache(activeView.file)?.frontmatter;
       const content = frontMatter
         ? fileContent
@@ -101,20 +107,12 @@ export default class TistoryPlugin extends Plugin {
             .replace(/^<!--.*-->$/ms, '')
             .trim()
         : fileContent;
-      // console.log('parseYaml', parseYaml(fileContent));
 
       // TODO: blogName를 프론트메터에서도 가져오기
       const tistoryAuthInfo = loadTistoryAuthInfo();
-      let blogName = tistoryAuthInfo?.selectedBlog ?? '';
-      if (!blogName) {
-        // TODO: blogName가 없으면 다시 조회하여 셋팅
-        blogName = '';
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      // const previewEl = (activeView.previewMode as any).renderer.previewEl.children[0] as HTMLDivElement;
 
       const postOptions = frontMatter as PostOptions;
+      const blogName = postOptions?.blogName || tistoryAuthInfo?.selectedBlog || '';
       const options = {
         visibility: postOptions?.visibility,
         category: postOptions?.category,
