@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.3...0.0.4) (2022-09-17)
+
+
+### Features
+
+* 컨텐츠에서 주석 제거 ([bb46286](https://github.com/anpigon/obsidian-tistory-plugin/commit/bb462865fa9eb96a104347ef20c0303eadcb758b))
+
+
+### Bug Fixes
+
+* 티스토리 인증 완료 후 첫번째 블로그 자동 선택 ([f745c0d](https://github.com/anpigon/obsidian-tistory-plugin/commit/f745c0d25e87d4555af140d5dc94975f50b5d88d))
+* 프론트메터에 position 추가되는 이슈 ([59be387](https://github.com/anpigon/obsidian-tistory-plugin/commit/59be387b19dd527a5685fd754b21e5928317b466))
+* preview 모드에서 글 발행 가능 ([c2bf86d](https://github.com/anpigon/obsidian-tistory-plugin/commit/c2bf86deb012f4c3e78e83fd0ceb67eb88a661c3))
+* TistorySettingTab 화면 react 렌더링 warning 제거 ([569432a](https://github.com/anpigon/obsidian-tistory-plugin/commit/569432ab9241646a77cd30ba5f7039a9f1006f6a))
+* type error in TistoryPosts ([515fa91](https://github.com/anpigon/obsidian-tistory-plugin/commit/515fa91651679d58ccf52310737c22f40d01616c))
+
+
+### Code Refactoring
+
+* PublishConfirmModal 필요없는 PluginProvider 코드 삭제 ([4fbb255](https://github.com/anpigon/obsidian-tistory-plugin/commit/4fbb255c6289f44f39feab6e3d7e04d698b4ed72))
+* SettingItem error 변수명 수정 ([eeea4fe](https://github.com/anpigon/obsidian-tistory-plugin/commit/eeea4fe82d4505c5dbc0902d0f5d8b600008f39f))
+
 ### [0.0.3](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.1...0.0.3) (2022-09-17)
 
 
