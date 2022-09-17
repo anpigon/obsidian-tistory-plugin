@@ -4,7 +4,6 @@ import { createRoot, Root } from 'react-dom/client';
 
 import TistoryPlugin from '~/TistoryPlugin';
 import PublicConfirmModalView, { PostOptions } from './components/PublicConfirmModalView';
-import { PluginProvider } from './context';
 
 export class PublishConfirmModal extends Modal {
   #root: Root | null;
@@ -32,16 +31,15 @@ export class PublishConfirmModal extends Modal {
     if (!this.#root) {
       this.#root = createRoot(contentEl);
     }
+
     this.#root.render(
-      <PluginProvider.Provider value={{ plugin: this.plugin }}>
-        <PublicConfirmModalView
-          plugin={this.plugin}
-          blogName={this.blogName}
-          options={this.options}
-          onClose={() => this.close()}
-          onPublish={result => this.handlePublish(result)}
-        />
-      </PluginProvider.Provider>,
+      <PublicConfirmModalView
+        plugin={this.plugin}
+        blogName={this.blogName}
+        options={this.options}
+        onClose={() => this.close()}
+        onPublish={result => this.handlePublish(result)}
+      />,
     );
   }
 
