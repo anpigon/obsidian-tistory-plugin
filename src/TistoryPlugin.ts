@@ -123,7 +123,6 @@ export default class TistoryPlugin extends Plugin {
           content: markdownToHtml(stripContent(content)),
           ...(postOptions?.postId && { postId: postOptions.postId }),
         } as PostParams;
-        console.log(params);
 
         try {
           let response: WritePostResponse;
