@@ -142,7 +142,7 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
 
       {authType === AuthType.USE_MY_TISTORY_APP && (
         <>
-          <SettingItem name="App ID" description="티스토리 앱 App ID를 입력하세요." error={formError.appId}>
+          <SettingItem name="App ID" description="티스토리 앱 App ID를 입력하세요." errorMessage={formError.appId}>
             <input
               type="text"
               aria-label="티스토리 앱 App ID"
@@ -151,7 +151,11 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
               placeholder="티스토리 앱 App ID"
             />
           </SettingItem>
-          <SettingItem name="Secret Key" description="티스토리 앱 Secret Key를 입력하세요." error={formError.secretKey}>
+          <SettingItem
+            name="Secret Key"
+            description="티스토리 앱 Secret Key를 입력하세요."
+            errorMessage={formError.secretKey}
+          >
             <input
               type="password"
               aria-label="티스토리 앱 Secret Key"
@@ -167,7 +171,7 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
         <SettingItem
           name="티스토리 인증"
           description="인증하기 버튼을 눌러 티스토리 인증을 해주세요."
-          error={disabledAuthButton && 'App ID와 Secret Key를 입력해주세요.'}
+          errorMessage={disabledAuthButton && 'App ID와 Secret Key를 입력해주세요.'}
         >
           <button onClick={handleLogin} disabled={disabledAuthButton}>
             인증하기
