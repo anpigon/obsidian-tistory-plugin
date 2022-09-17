@@ -100,17 +100,16 @@ export default class TistoryPlugin extends Plugin {
     }
 
     try {
-      const frontMatter = this.app.metadataCache.getFileCache(activeView.file)?.frontmatter;
-      const content = frontMatter
-        ? fileContent
-            .slice(frontMatter.position.end.offset)
-            .replace(/^<!--.*-->$/ms, '')
-            .trim()
-        : fileContent;
+      const frontMatter = { ...this.app.metadataCache.getFileCache(activeView.file)?.frontmatter };
+      const content = fileContent
+        .slice(frontMatter.position?.end.offset ?? 0)
+        .replace(/^<!--[^>]*-->$/gms, '')
+        .replace(/^%%[^%]*%%$/gms, '')
+        .trim();
+      delete frontMatter.position;
 
-      // TODO: blogName를 프론트메터에서도 가져오기
+      console.log(content);
       const tistoryAuthInfo = loadTistoryAuthInfo();
-
       const postOptions = frontMatter as PostOptions;
       const blogName = postOptions?.blogName || tistoryAuthInfo?.selectedBlog || '';
       const options = {
@@ -128,7 +127,6 @@ export default class TistoryPlugin extends Plugin {
           content: markdownToHtml(content),
           ...(postOptions?.postId && { postId: postOptions.postId }),
         } as PostParams;
-        console.log(params);
 
         try {
           let response: WritePostResponse;
