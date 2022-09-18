@@ -10,7 +10,3 @@ export const openFile = (props: { file: TFile; app: App; isNewLeaf: boolean }) =
 export const openFileInNewPane = (app: App, file: TFile) => {
   openFile({ file: file, app: app, isNewLeaf: true });
 };
-
-export const removeObsidianComments = (content: string) => {
-  return content.replace(/^\n?<!--(.+?)-->\n?$/gms, '').replace(/^\n?%%(.+?)%%\n?$/gms, '');
-};

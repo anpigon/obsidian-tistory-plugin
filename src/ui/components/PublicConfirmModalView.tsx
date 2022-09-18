@@ -29,7 +29,6 @@ type Props = PropsWithChildren<{
 const PublicConfirmModalView: React.FC<Props> = (props) => {
   const { plugin, blogName, options, onClose, onPublish } = props;
   const { tistoryClient } = plugin;
-  console.log(options);
 
   const [categories, setCategories] = useState<Category[]>([]);
 

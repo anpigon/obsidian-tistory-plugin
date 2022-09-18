@@ -8,9 +8,8 @@ import { loadTistoryAuthInfo } from '~/helper/storage';
 import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
 import { UpdatePostParams, UpdatePostResponse } from './tistory/types';
 import { PostOptions } from './ui/components/PublicConfirmModalView';
-import { markdownToHtml } from './helper/markdown';
 import TistoryError from './tistory/TistoryError';
-import { removeObsidianComments } from './helper/utils';
+import Publisher from './helper/publisher';
 
 export default class TistoryPlugin extends Plugin {
   #settings: TistoryPluginSettings;
@@ -116,12 +115,13 @@ export default class TistoryPlugin extends Plugin {
       } as PostOptions;
 
       new PublishConfirmModal(this, blogName, options, async (result) => {
+        const publisher = new Publisher(this.app);
         const addPostParams = {
           blogName,
           title: result.tistoryTitle || options.tistoryTitle,
           visibility: result.tistoryVisibility,
           category: result.tistoryCategory,
-          content: markdownToHtml(removeObsidianComments(content)),
+          content: await publisher.generateHtml(content, activeView.file.path),
           ...(postOptions?.tistoryPostId && { postId: postOptions.tistoryPostId }),
         } as UpdatePostParams;
 
