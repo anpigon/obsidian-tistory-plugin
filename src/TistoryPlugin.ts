@@ -102,7 +102,7 @@ export default class TistoryPlugin extends Plugin {
 
     try {
       const frontMatter = { ...this.app.metadataCache.getFileCache(activeView.file)?.frontmatter };
-      const content = fileContent.slice(frontMatter.position?.end.offset ?? 0).trim();
+      const content = fileContent.slice(frontMatter.position?.end.offset ?? 0);
       delete frontMatter.position;
 
       const tistoryAuthInfo = loadTistoryAuthInfo();
@@ -144,7 +144,7 @@ export default class TistoryPlugin extends Plugin {
             tistoryPostId: response.postId,
             tistoryPostUrl: response.url,
           };
-          const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---\n${content}`;
+          const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---${content}`;
           await this.app.vault.modify(activeView.file, newFileContent);
           new Notice(`티스토리에 글이 발행되었습니다.`);
         } catch (err) {

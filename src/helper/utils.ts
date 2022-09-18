@@ -12,8 +12,5 @@ export const openFileInNewPane = (app: App, file: TFile) => {
 };
 
 export const removeObsidianComments = (content: string) => {
-  return content
-    .replace(/^\n?<!--(.+?)-->\n?$/gms, '')
-    .replace(/^\n?%%(.+?)%%\n?$/gms, '')
-    .trim();
+  return content.replace(/^\n?<!--(.+?)-->\n?$/gms, '').replace(/^\n?%%(.+?)%%\n?$/gms, '');
 };
