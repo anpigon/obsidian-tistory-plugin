@@ -39,7 +39,7 @@ export interface PostDetail extends Post {
   };
 }
 
-export interface PostParams {
+export interface UpdatePostParams {
   blogName: string;
   postId?: string; // 글 번호 (수정 시 필수)
   title: string; // 글 제목 (필수)
@@ -49,11 +49,11 @@ export interface PostParams {
   published?: string; // 발행시간 (TIMESTAMP 이며 미래의 시간을 넣을 경우 예약. 기본값: 현재시간)
   slogan?: string; // 문자 주소
   tag?: string; // 태그 (',' 로 구분)
-  acceptComment?: string; // 댓글 허용 (0, 1 - 기본값)
+  acceptComment?: '0' | '1'; // 댓글 허용 (0, 1 - 기본값)
   password?: string; // 보호글 비밀번호
 }
 
-export interface WritePostResponse extends Omit<Tistory<void>, 'item'> {
+export interface UpdatePostResponse extends Omit<Tistory<void>, 'item'> {
   postId: string;
   url: string;
 }

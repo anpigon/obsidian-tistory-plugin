@@ -6,11 +6,11 @@ import { VIEW_TYPE } from '~/ui/TistoryPostsView';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
 import { loadTistoryAuthInfo } from '~/helper/storage';
 import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
-import { PostParams, WritePostResponse } from './tistory/types';
+import { UpdatePostParams, UpdatePostResponse } from './tistory/types';
 import { PostOptions } from './ui/components/PublicConfirmModalView';
 import { markdownToHtml } from './helper/markdown';
 import TistoryError from './tistory/TistoryError';
-import { stripContent } from './helper/utils';
+import { removeObsidianComments } from './helper/utils';
 
 export default class TistoryPlugin extends Plugin {
   #settings: TistoryPluginSettings;
@@ -107,41 +107,42 @@ export default class TistoryPlugin extends Plugin {
 
       const tistoryAuthInfo = loadTistoryAuthInfo();
       const postOptions = frontMatter as PostOptions;
-      const blogName = postOptions?.blogName || tistoryAuthInfo?.selectedBlog || '';
+      const blogName = postOptions?.tistoryBlogName || tistoryAuthInfo?.selectedBlog || '';
       const options = {
-        visibility: postOptions?.visibility,
-        category: postOptions?.category,
-        title: postOptions?.title || activeView.file.basename,
+        tistoryVisibility: postOptions?.tistoryVisibility,
+        tistoryCategory: postOptions?.tistoryCategory,
+        tistoryTitle: postOptions?.tistoryTitle || postOptions?.title || activeView.file.basename,
+        tistoryTag: postOptions?.tistoryTag || postOptions?.tag,
       } as PostOptions;
 
       new PublishConfirmModal(this, blogName, options, async (result) => {
-        const params = {
+        const addPostParams = {
           blogName,
-          title: result.title || options.title,
-          visibility: result.visibility || '0',
-          category: result.category || '0',
-          content: markdownToHtml(stripContent(content)),
-          ...(postOptions?.postId && { postId: postOptions.postId }),
-        } as PostParams;
+          title: result.tistoryTitle || options.tistoryTitle,
+          visibility: result.tistoryVisibility,
+          category: result.tistoryCategory,
+          content: markdownToHtml(removeObsidianComments(content)),
+          ...(postOptions?.tistoryPostId && { postId: postOptions.tistoryPostId }),
+        } as UpdatePostParams;
 
         try {
-          let response: WritePostResponse;
-          if (postOptions?.postId) {
+          let response: UpdatePostResponse;
+          if (postOptions?.tistoryPostId) {
             // 기존 글 수정
-            response = await this.#tistoryClient.modifyPost(params);
+            response = await this.#tistoryClient.modifyPost(addPostParams);
           } else {
             // 글 새로 등록
-            response = await this.#tistoryClient.writePost(params);
+            response = await this.#tistoryClient.writePost(addPostParams);
           }
 
           const newFrontMatter = {
             ...frontMatter,
-            blogName: params.blogName,
-            title: params.title,
-            visibility: params.visibility,
-            category: params.category,
-            postId: response.postId,
-            url: response.url,
+            tistoryBlogName: addPostParams.blogName,
+            tistoryTitle: addPostParams.title,
+            tistoryVisibility: addPostParams.visibility,
+            tistoryCategory: addPostParams.category,
+            tistoryPostId: response.postId,
+            tistoryPostUrl: response.url,
           };
           const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---\n${content}`;
           await this.app.vault.modify(activeView.file, newFileContent);
@@ -149,7 +150,7 @@ export default class TistoryPlugin extends Plugin {
         } catch (err) {
           console.warn(err);
           if (err instanceof TistoryError && err.message === '게시글 정보가 존재하지 않습니다.') {
-            new Notice(`${err.message}(postId=${postOptions?.postId})`);
+            new Notice(`${err.message}(postId=${postOptions?.tistoryPostId})`);
           } else {
             new Notice((err as Error).toString());
           }

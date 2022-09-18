@@ -4,9 +4,9 @@ import {
   GetTistoryPosts,
   GetTistoryResponse,
   PostDetail,
-  PostParams,
+  UpdatePostParams,
   Tistory,
-  WritePostResponse,
+  UpdatePostResponse,
 } from './types';
 import TistoryError from './TistoryError';
 
@@ -96,7 +96,7 @@ export default class TistoryClient {
    * @ref https://tistory.github.io/document-tistory-apis/apis/v1/post/write.html
    * @returns
    */
-  async writePost(params: Omit<PostParams, 'postId'>) {
+  async writePost(params: Omit<UpdatePostParams, 'postId'>) {
     return await this.uploadPost('/post/write', params);
   }
 
@@ -104,11 +104,11 @@ export default class TistoryClient {
    * @ref https://tistory.github.io/document-tistory-apis/apis/v1/post/write.html
    * @returns
    */
-  async modifyPost(params: PostParams) {
+  async modifyPost(params: UpdatePostParams) {
     return await this.uploadPost('/post/modify', params);
   }
 
-  async uploadPost(path: string, params: PostParams) {
+  async uploadPost(path: string, params: UpdatePostParams) {
     const {
       blogName,
       title,
@@ -141,6 +141,6 @@ export default class TistoryClient {
       method: 'post',
       body: formData,
     });
-    return await this.handleResponse<never, WritePostResponse>(response);
+    return await this.handleResponse<never, UpdatePostResponse>(response);
   }
 }
