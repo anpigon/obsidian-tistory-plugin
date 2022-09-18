@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.4...0.0.5) (2022-09-18)
+
+
+### Bug Fixes
+
+* 컨텐츠 trim 이슈 수정 ([010d9fb](https://github.com/anpigon/obsidian-tistory-plugin/commit/010d9fb3228b6b8de8f3af9a6082de3dfcb1ac8d))
+* markdown to html 옵션 설정 ([e6e0361](https://github.com/anpigon/obsidian-tistory-plugin/commit/e6e0361a24c98d4ce06ca51a48387fe26fcb0381))
+
+
+### Code Refactoring
+
+* 마크다운 to html 개선 ([242fbeb](https://github.com/anpigon/obsidian-tistory-plugin/commit/242fbebf05628dad42b87c2bdc4b20e10d097ee2))
+* 프론트매터 변수명 수정 ([9e6d04d](https://github.com/anpigon/obsidian-tistory-plugin/commit/9e6d04d3a3f6755892c1dab753058388491113ad))
+
 ### [0.0.4](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.3...0.0.4) (2022-09-17)
 
 
