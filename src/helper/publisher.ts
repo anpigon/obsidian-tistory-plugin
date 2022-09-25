@@ -20,7 +20,7 @@ export default class Publisher {
   }
 
   removeObsidianComments(content: string) {
-    return content.replace(/^\n?<!--(.+?)-->\n?$/gms, '').replace(/^\n?%%(.+?)%%\n?$/gms, '');
+    return content.replace(/^\n?%%(.+?)%%\n?$/gms, '');
   }
 
   async renderDataViews(text: string, path: string) {
