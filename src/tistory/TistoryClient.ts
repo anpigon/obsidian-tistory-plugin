@@ -7,6 +7,7 @@ import {
   UpdatePostParams,
   Tistory,
   UpdatePostResponse,
+  UploadAttachResponse,
 } from './types';
 import TistoryError from './TistoryError';
 
@@ -97,7 +98,7 @@ export default class TistoryClient {
    * @returns
    */
   async writePost(params: Omit<UpdatePostParams, 'postId'>) {
-    return await this.uploadPost('/post/write', params);
+    return await this.uploadPost('write', params);
   }
 
   /** 글 수정 API
@@ -105,42 +106,47 @@ export default class TistoryClient {
    * @returns
    */
   async modifyPost(params: UpdatePostParams) {
-    return await this.uploadPost('/post/modify', params);
+    return await this.uploadPost('modify', params);
   }
 
-  async uploadPost(path: string, params: UpdatePostParams) {
-    const {
-      blogName,
-      title,
-      content,
-      visibility = '0',
-      category = '0',
-      published,
-      slogan,
-      tag,
-      acceptComment = '1',
-      password,
-      postId,
-    } = params;
+  createFormData(params: UpdatePostParams) {
+    const formData = new FormData();
+    formData.append('blogName', params.blogName);
+    formData.append('title', params.title);
+    formData.append('category', params.category ?? '0');
+    formData.append('visibility', params.visibility ?? '0');
+    formData.append('acceptComment', params.acceptComment ?? '1');
+    if (params.content) formData.append('content', params.content);
+    if (params.published) formData.append('published', params.published);
+    if (params.slogan) formData.append('slogan', params.slogan);
+    if (params.tag) formData.append('tag', params.tag);
+    if (params.password) formData.append('password', params.password);
+    if (params.postId) formData.append('postId', params.postId);
+    return formData;
+  }
 
+  async uploadPost(type: 'write' | 'modify', params: UpdatePostParams) {
+    return fetch(this.getAuthenticatedUrl(`/post/${type}`), {
+      method: 'post',
+      body: this.createFormData(params),
+    }).then(this.handleResponse<never, UpdatePostResponse>);
+  }
+
+  /** 파일 첨부 API
+   * @ref https://tistory.github.io/document-tistory-apis/apis/v1/post/attach.html
+   * @returns
+   */
+  async uploadFile(blogName: string, fileBlob: Blob, fileName?: string) {
     const formData = new FormData();
     formData.append('blogName', blogName);
-    formData.append('title', title);
-    formData.append('category', category);
-    formData.append('visibility', visibility);
-    formData.append('acceptComment', acceptComment);
-    if (content) formData.append('content', content);
-    if (published) formData.append('published', published);
-    if (slogan) formData.append('slogan', slogan);
-    if (tag) formData.append('tag', tag);
-    if (password) formData.append('password', password);
-    if (postId) formData.append('postId', postId);
-
-    const url = this.getAuthenticatedUrl(path);
-    const response = await fetch(url, {
+    formData.append('uploadedfile', fileBlob, fileName);
+    const url = this.getAuthenticatedUrl('/post/attach');
+    return fetch(url, {
       method: 'post',
       body: formData,
-    });
-    return await this.handleResponse<never, UpdatePostResponse>(response);
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then(this.handleResponse<never, UploadAttachResponse>);
   }
 }

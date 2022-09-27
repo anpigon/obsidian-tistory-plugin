@@ -58,6 +58,11 @@ export interface UpdatePostResponse extends Omit<Tistory<void>, 'item'> {
   url: string;
 }
 
+export interface UploadAttachResponse extends Omit<Tistory<void>, 'item'> {
+  replacer: string;
+  url: string;
+}
+
 export interface GetTistoryBlogs {
   url: string;
   secondaryUrl: string;
