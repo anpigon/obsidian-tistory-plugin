@@ -4,7 +4,7 @@ import { TistoryPluginSettings } from '~/types';
 import TistoryClient from '~/tistory/TistoryClient';
 import { VIEW_TYPE } from '~/ui/TistoryPostsView';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
-import { loadTistoryAuthInfo } from '~/helper/storage';
+import { TistoryAuthStorage } from '~/helper/storage';
 import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
 import { UpdatePostParams, UpdatePostResponse } from './tistory/types';
 import { PostOptions } from './ui/components/PublicConfirmModalView';
@@ -55,7 +55,7 @@ export default class TistoryPlugin extends Plugin {
     //   // }
     // });
 
-    this.createTistoryClient(loadTistoryAuthInfo()?.accessToken);
+    this.createTistoryClient(TistoryAuthStorage.loadTistoryAuthInfo()?.accessToken);
   }
 
   openTistoryLeaf = async (showAfterAttach: boolean) => {
@@ -104,7 +104,7 @@ export default class TistoryPlugin extends Plugin {
       const content = fileContent.slice(frontMatter.position?.end.offset ?? 0);
       delete frontMatter.position;
 
-      const tistoryAuthInfo = loadTistoryAuthInfo();
+      const tistoryAuthInfo = TistoryAuthStorage.loadTistoryAuthInfo();
       const postOptions = frontMatter as PostOptions;
       const blogName = postOptions?.tistoryBlogName || tistoryAuthInfo?.selectedBlog || '';
       const options = {

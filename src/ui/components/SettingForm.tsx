@@ -6,7 +6,7 @@ import { encrypt } from '~/helper/encrypt';
 import TistoryPlugin from '~/TistoryPlugin';
 import SettingItem from './SettingItem';
 import TistoryClient from '~/tistory/TistoryClient';
-import { clearTistoryAuthInfo, loadTistoryAuthInfo, updateTistoryAuthInfo } from '~/helper/storage';
+import { TistoryAuthStorage } from '~/helper/storage';
 import { Blog } from '~/tistory/types';
 
 type Props = {
@@ -29,21 +29,21 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   const [selectedBlog, setSelectedBlog] = useState('');
   const [blogs, setBlogs] = useState<Blog[]>();
 
-  const handleChangeAuthType: ChangeEventHandler<HTMLSelectElement> = event => {
+  const handleChangeAuthType: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const newValue = event.target.value as AuthType;
     setAuthType(newValue);
     settings.authType = newValue;
     plugin.saveSettings();
   };
 
-  const handleChangeAppId: ChangeEventHandler<HTMLInputElement> = event => {
+  const handleChangeAppId: ChangeEventHandler<HTMLInputElement> = (event) => {
     const newValue = event.target.value;
     setAppId(newValue);
     settings.appId = newValue;
     plugin.saveSettings();
   };
 
-  const handleChangeSecretKey: ChangeEventHandler<HTMLInputElement> = useCallback(async event => {
+  const handleChangeSecretKey: ChangeEventHandler<HTMLInputElement> = useCallback(async (event) => {
     const newValue = event.target.value;
     setSecretKey(newValue);
     settings.secretKey = newValue.length === 72 ? await encrypt(newValue, ENCRYPTED_PASSWORD) : newValue;
@@ -59,7 +59,7 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   const handleValidate = () => {
     const _isAppId = isAppId(appId);
     const _isValidateSecretKey = isValidateSecretKey(secretKey);
-    setFormError(prev => ({
+    setFormError((prev) => ({
       ...prev,
       appId: (appId || formError.appId) && !_isAppId ? '올바른 App ID를 입력해주세요.' : '',
       secretKey: (secretKey || formError.secretKey) && !_isValidateSecretKey ? '올바른 Secret Key를 입력해주세요.' : '',
@@ -69,18 +69,18 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
 
   const handleLogin = () => {
     // 인증을 시도하고 인증 성공 여부을 콜백 함수로 받는다.
-    onAuth(isSuccess => {
+    onAuth((isSuccess) => {
       setIsLogged(isSuccess);
     });
   };
 
   const handleLogout = () => {
-    clearTistoryAuthInfo();
+    TistoryAuthStorage.clearTistoryAuthInfo();
     setIsLogged(false);
   };
 
   const loadAuthInfo = async () => {
-    const accessInfo = loadTistoryAuthInfo();
+    const accessInfo = TistoryAuthStorage.loadTistoryAuthInfo();
     // TODO: 인증 실패하면 에러 메시지 출력후 재로그인 팝업 노출하기
     if (accessInfo?.accessToken) {
       const client = new TistoryClient(accessInfo?.accessToken);
@@ -89,7 +89,7 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
       setSelectedBlog(accessInfo?.selectedBlog || blogs[0].name);
 
       if (!accessInfo.selectedBlog) {
-        updateTistoryAuthInfo({ selectedBlog: blogs[0].name });
+        TistoryAuthStorage.updateTistoryAuthInfo({ selectedBlog: blogs[0].name });
       }
     }
   };
@@ -108,10 +108,10 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
     }
   }, [authType, appId, secretKey]);
 
-  const handleChangeBlog: ChangeEventHandler<HTMLSelectElement> = event => {
+  const handleChangeBlog: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const value = event.target.value;
     setSelectedBlog(value);
-    updateTistoryAuthInfo({ selectedBlog: value });
+    TistoryAuthStorage.updateTistoryAuthInfo({ selectedBlog: value });
   };
 
   return (
@@ -194,7 +194,7 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
               onChange={handleChangeBlog}
               value={selectedBlog}
             >
-              {blogs?.map(blog => {
+              {blogs?.map((blog) => {
                 return (
                   <option key={blog.blogId} id={blog.blogId} value={blog.name}>
                     {blog.title} ({blog.url.replace(/^https?:\/\//, '')})

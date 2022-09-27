@@ -8,7 +8,7 @@ import TistoryAuthModal from './components/TistoryAuthModal';
 import SettingForm from './components/SettingForm';
 import { AuthType, TistoryPluginSettings } from '~/types';
 import { decrypt } from '~/helper/encrypt';
-import { saveTistoryAuthInfo } from '~/helper/storage';
+import { TistoryAuthStorage } from '~/helper/storage';
 import { requestTistoryAccessToken, createTistoryAuthUrl } from '~/tistory';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {
@@ -27,7 +27,7 @@ export default class TistorySettingTab extends PluginSettingTab {
     this.state = '';
 
     // 티스토리 인증 콜팩 URL 프로토콜 리스닝 핸들러
-    this.plugin.registerObsidianProtocolHandler('tistory-oauth', params => {
+    this.plugin.registerObsidianProtocolHandler('tistory-oauth', (params) => {
       if (!this.authModal || !this.authModal.isOpen) {
         return;
       }
@@ -69,7 +69,7 @@ export default class TistorySettingTab extends PluginSettingTab {
       });
 
       // 토큰값 저장
-      saveTistoryAuthInfo({
+      TistoryAuthStorage.saveTistoryAuthInfo({
         accessToken,
         selectedBlog: '',
       });
@@ -118,7 +118,7 @@ export default class TistorySettingTab extends PluginSettingTab {
     }
 
     this.#root.render(
-      <SettingForm plugin={this.plugin} onAuth={callback => this.handleTistoryAuthModalOpen(callback)} />,
+      <SettingForm plugin={this.plugin} onAuth={(callback) => this.handleTistoryAuthModalOpen(callback)} />,
     );
   }
 }

@@ -2,7 +2,7 @@ import React, { ChangeEvent, PropsWithChildren, useEffect, useState, useRef } fr
 import { Category, Post } from '~/tistory/types';
 import TistoryPlugin from '~/TistoryPlugin';
 import SettingItem from './SettingItem';
-import { updateTistoryAuthInfo } from '~/helper/storage';
+import { TistoryAuthStorage } from '~/helper/storage';
 
 export type PostOptions = Partial<{
   tistoryBlogName: string;
@@ -66,7 +66,7 @@ const PublicConfirmModalView: React.FC<Props> = (props) => {
         const { blogs } = await tistoryClient.getBlogs();
         tistoryBlogName.current = blogs[0].name;
         if (tistoryBlogName.current) {
-          updateTistoryAuthInfo({ selectedBlog: tistoryBlogName.current });
+          TistoryAuthStorage.updateTistoryAuthInfo({ selectedBlog: tistoryBlogName.current });
         }
       }
 
