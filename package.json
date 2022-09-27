@@ -19,6 +19,7 @@
 	},
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
+		"test": "jest",
 		"build": "yarn lint && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"format": "prettier --write \"**/*.ts\"",
@@ -34,6 +35,12 @@
 		"prepare": "husky install"
 	},
 	"devDependencies": {
+		"@testing-library/dom": "^8.18.1",
+		"@testing-library/jest-dom": "^5.16.5",
+		"@testing-library/react": "^13.4.0",
+		"@testing-library/react-hooks": "^8.0.1",
+		"@testing-library/user-event": "^14.4.3",
+		"@types/jest": "^28.1.6",
 		"@types/markdown-it": "^12.2.3",
 		"@types/marked": "^4.0.7",
 		"@types/node": "^16.11.6",
@@ -46,9 +53,14 @@
 		"esbuild": "0.14.47",
 		"eslint": "^8.23.0",
 		"husky": "^8.0.1",
+		"jest": "^28.1.3",
+		"jest-environment-jsdom": "^28.1.3",
+		"msw": "^0.47.3",
 		"obsidian": "latest",
 		"prettier": "^2.7.1",
 		"standard-version": "^9.5.0",
+		"ts-jest": "^28.0.7",
+		"ts-node": "^10.9.1",
 		"tslib": "2.4.0",
 		"typescript": "4.7.4"
 	},
@@ -61,6 +73,7 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"rfc4648": "^1.5.2",
-		"styled-components": "^5.3.5"
+		"styled-components": "^5.3.5",
+		"whatwg-fetch": "^3.6.2"
 	}
 }
