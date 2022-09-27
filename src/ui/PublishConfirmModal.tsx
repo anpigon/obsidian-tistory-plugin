@@ -3,7 +3,7 @@ import React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 
 import TistoryPlugin from '~/TistoryPlugin';
-import PublicConfirmModalView, { PostOptions } from './components/PublicConfirmModalView';
+import PublishConfirmModalView, { PostOptions } from './components/PublishConfirmModalView';
 
 export class PublishConfirmModal extends Modal {
   #root: Root | null;
@@ -33,12 +33,12 @@ export class PublishConfirmModal extends Modal {
     }
 
     this.#root.render(
-      <PublicConfirmModalView
+      <PublishConfirmModalView
         plugin={this.plugin}
         blogName={this.blogName}
         options={this.options}
         onClose={() => this.close()}
-        onPublish={result => this.handlePublish(result)}
+        onPublish={(result) => this.handlePublish(result)}
       />,
     );
   }

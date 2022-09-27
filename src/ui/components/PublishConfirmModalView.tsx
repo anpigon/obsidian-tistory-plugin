@@ -27,7 +27,7 @@ type Props = PropsWithChildren<{
   onPublish(result: PostOptions): void;
 }>;
 
-const PublicConfirmModalView: React.FC<Props> = (props) => {
+const PublishConfirmModalView: React.FC<Props> = (props) => {
   const { plugin, blogName, options, onClose, onPublish } = props;
   const { tistoryClient } = plugin;
 
@@ -143,4 +143,4 @@ const PublicConfirmModalView: React.FC<Props> = (props) => {
   );
 };
 
-export default PublicConfirmModalView;
+export default PublishConfirmModalView;
