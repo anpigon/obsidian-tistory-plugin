@@ -117,7 +117,7 @@ export default class TistoryPlugin extends Plugin {
       new PublishConfirmModal(this, blogName, options, async (result) => {
         const publisher = new Publisher(this.app);
         const addPostParams = {
-          blogName,
+          blogName: result.tistoryBlogName,
           title: result.tistoryTitle || options.tistoryTitle,
           visibility: result.tistoryVisibility,
           category: result.tistoryCategory,

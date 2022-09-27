@@ -1,7 +1,8 @@
-import React, { ChangeEvent, PropsWithChildren, useEffect, useState } from 'react';
+import React, { ChangeEvent, PropsWithChildren, useEffect, useState, useRef } from 'react';
 import { Category, Post } from '~/tistory/types';
 import TistoryPlugin from '~/TistoryPlugin';
 import SettingItem from './SettingItem';
+import { updateTistoryAuthInfo } from '~/helper/storage';
 
 export type PostOptions = Partial<{
   tistoryBlogName: string;
@@ -30,6 +31,7 @@ const PublicConfirmModalView: React.FC<Props> = (props) => {
   const { plugin, blogName, options, onClose, onPublish } = props;
   const { tistoryClient } = plugin;
 
+  const tistoryBlogName = useRef(blogName);
   const [categories, setCategories] = useState<Category[]>([]);
 
   const [tistoryTitle, setTistoryTitle] = useState(options?.tistoryTitle);
@@ -50,6 +52,7 @@ const PublicConfirmModalView: React.FC<Props> = (props) => {
 
   const handlePublish = () => {
     onPublish({
+      tistoryBlogName: tistoryBlogName.current,
       tistoryVisibility,
       tistoryCategory,
       tistoryTitle,
@@ -58,11 +61,22 @@ const PublicConfirmModalView: React.FC<Props> = (props) => {
 
   useEffect(() => {
     (async function loadCategories() {
-      const getCategoriesResponse = await tistoryClient.getCategories(blogName);
-      setCategories(getCategoriesResponse.categories);
+      // If no blog is selected, select the first blog automatically
+      if (!tistoryBlogName.current) {
+        const { blogs } = await tistoryClient.getBlogs();
+        tistoryBlogName.current = blogs[0].name;
+        if (tistoryBlogName.current) {
+          updateTistoryAuthInfo({ selectedBlog: tistoryBlogName.current });
+        }
+      }
 
+      // Fetching a list of categories in a blog
+      const { categories } = await tistoryClient.getCategories(tistoryBlogName.current);
+      setCategories(categories);
+
+      // To automatically select a category
       const hasCategoryInBlog = Boolean(
-        options?.tistoryCategory && getCategoriesResponse.categories.find(({ id }) => id === options?.tistoryCategory),
+        options?.tistoryCategory && categories.find(({ id }) => id === options?.tistoryCategory),
       );
       if (!hasCategoryInBlog) {
         setTistoryCategory('0');
