@@ -194,6 +194,7 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
               onChange={handleChangeBlog}
               value={selectedBlog}
             >
+              <option disabled>기본 블로그를 선택하세요.</option>
               {blogs?.map((blog) => {
                 return (
                   <option key={blog.blogId} id={blog.blogId} value={blog.name}>
