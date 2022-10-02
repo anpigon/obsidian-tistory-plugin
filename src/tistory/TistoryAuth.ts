@@ -1,5 +1,6 @@
 import { request, requestUrl } from 'obsidian';
 import { TISTORY_REDIRECT_URI } from '~/constants';
+import AuthenticationError from './AuthenticationError';
 
 const TISTORY_AUTH_BASE_URL = 'https://www.tistory.com/oauth';
 
@@ -33,8 +34,7 @@ export async function requestTistoryAccessToken({
     const accessToken = responseText.replace('access_token=', '');
     return accessToken;
   } else {
-    // TODO: AuthenticationError implementation 작성하기
-    throw new Error('Authentication failed');
+    throw new AuthenticationError();
   }
 }
 
@@ -45,6 +45,6 @@ export async function requestTistoryAccessTokenToVercel(code: string) {
   if (json.hasOwnProperty('access_token')) {
     return json['access_token'];
   } else {
-    throw new Error('Authentication failed');
+    throw new AuthenticationError();
   }
 }
