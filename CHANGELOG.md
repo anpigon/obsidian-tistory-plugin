@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.5...0.0.6) (2022-10-02)
+
+
+### Features
+
+* 간편 인증 기능 ([dae13b1](https://github.com/anpigon/obsidian-tistory-plugin/commit/dae13b11000cb3b62e49678000e16ab4be1180ac))
+* 티스토리 파일 업로드 API 구현 ([ccc1656](https://github.com/anpigon/obsidian-tistory-plugin/commit/ccc1656e76f4ef540b1badc9ac4d80e59e1143ce))
+
+
+### Bug Fixes
+
+* 선택된 블로그가 없는 경우, 첫번째 블로그 자동 선택하기 ([e378230](https://github.com/anpigon/obsidian-tistory-plugin/commit/e3782301fc45d572c714480b985d655bb604bd4f))
+
+
+### Code Refactoring
+
+* add AuthenticationError ([c20dfc1](https://github.com/anpigon/obsidian-tistory-plugin/commit/c20dfc1a5aea8087baf596a7cfaf231ba7ad0f3c))
+* LocalStorage 함수를 클래스 함수로 변경 ([4a87bf5](https://github.com/anpigon/obsidian-tistory-plugin/commit/4a87bf5fad6e9444ffc058ed541b4cc101e36931))
+
 ### [0.0.5](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.4...0.0.5) (2022-09-18)
 
 
