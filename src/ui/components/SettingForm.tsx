@@ -121,7 +121,7 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
         name="티스토리 인증 방식"
         description={
           <div>
-            "간편 인증"은 개발자의 서버에서 인증하는 방식입니다. 서버 상태에 따라 인증이 안될 수도 있습니다.
+            "간편 인증"은 개발자 서버에서 인증하는 방식입니다. 서버 상태에 따라 인증이 안될 수도 있습니다.
             <br />
             "내 티스토리 앱 사용" 방식을 권장합니다. 티스토리 앱 생성은{' '}
             <a href="https://www.tistory.com/guide/api/manage/register">티스토리 오픈 API</a>
