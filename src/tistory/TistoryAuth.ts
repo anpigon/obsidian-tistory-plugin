@@ -1,4 +1,4 @@
-import { request } from 'obsidian';
+import { request, requestUrl } from 'obsidian';
 import { TISTORY_REDIRECT_URI } from '~/constants';
 
 const TISTORY_AUTH_BASE_URL = 'https://www.tistory.com/oauth';
@@ -30,11 +30,21 @@ export async function requestTistoryAccessToken({
     url: `${TISTORY_AUTH_BASE_URL}/access_token?client_id=${clientId}&client_secret=${clientSecretKey}&redirect_uri=${redirectUri}&code=${code}&grant_type=authorization_code`,
   });
   if (responseText.startsWith('access_token=')) {
-    // 토큰값 저장
     const accessToken = responseText.replace('access_token=', '');
     return accessToken;
   } else {
     // TODO: AuthenticationError implementation 작성하기
+    throw new Error('Authentication failed');
+  }
+}
+
+export async function requestTistoryAccessTokenToVercel(code: string) {
+  const { json } = await requestUrl({
+    url: `https://tistory-auth.vercel.app/api/oauth/access_token?code=${code}`,
+  });
+  if (json.hasOwnProperty('access_token')) {
+    return json['access_token'];
+  } else {
     throw new Error('Authentication failed');
   }
 }

@@ -9,7 +9,7 @@ import SettingForm from './components/SettingForm';
 import { AuthType, TistoryPluginSettings } from '~/types';
 import { decrypt } from '~/helper/encrypt';
 import { TistoryAuthStorage } from '~/helper/storage';
-import { requestTistoryAccessToken, createTistoryAuthUrl } from '~/tistory';
+import { requestTistoryAccessToken, createTistoryAuthUrl, requestTistoryAccessTokenToVercel } from '~/tistory';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {
   authType: AuthType.USE_MY_TISTORY_APP,
@@ -56,28 +56,28 @@ export default class TistorySettingTab extends PluginSettingTab {
   /** 티스토리 accessToken을 요청 */
   async handleTistoryAuthCallback(code: string) {
     const { authType } = this.plugin.settings;
+    let accessToken = '';
+
     if (authType === AuthType.EASY_AUTHENTICATION) {
-      // TODO: 인증 서버로 인증 요청하여 accessToken 발급 받기
-      // ex: https://tistory-auth.example.com?client_id=${TISTORY_CLIENT_ID}&code=${code}
+      accessToken = await requestTistoryAccessTokenToVercel(code);
     } else if (authType === AuthType.USE_MY_TISTORY_APP) {
-      const clientId = this.plugin.settings.appId;
-      const clientSecretKey = await decrypt(this.plugin.settings.secretKey, ENCRYPTED_PASSWORD);
-      const accessToken = await requestTistoryAccessToken({
+      accessToken = await requestTistoryAccessToken({
         code,
-        clientId,
-        clientSecretKey,
+        clientId: this.plugin.settings.appId,
+        clientSecretKey: await decrypt(this.plugin.settings.secretKey, ENCRYPTED_PASSWORD),
       });
-
-      // 토큰값 저장
-      TistoryAuthStorage.saveTistoryAuthInfo({
-        accessToken,
-        selectedBlog: '',
-      });
-
-      this.handleTistoryAuthModalClose(true);
-
-      this.plugin.createTistoryClient(accessToken);
     }
+
+    this.plugin.createTistoryClient(accessToken);
+    // TODO: 블로그 가져오기
+
+    // 토큰값 저장
+    TistoryAuthStorage.saveTistoryAuthInfo({
+      accessToken,
+      selectedBlog: '',
+    });
+
+    this.handleTistoryAuthModalClose(true);
   }
 
   getClientId() {
