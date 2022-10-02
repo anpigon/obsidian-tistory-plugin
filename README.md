@@ -26,6 +26,7 @@
 > 만약 "간편 인증"에서 인증 실패가 발생한다면 "내 티스토리 앱 사용" 옵션을 사용해주세요. 그리고 내 티스토리 앱을 사용하려면 티스토리 OpenAPI의 앱ID와 비밀키가 필요합니다. 키를 발급받는 방법은 아래쪽 [티스토리 OpenAPI에서 API 키 발급하는 방법](#티스토리-openapi에서-api-키-발급하는-방법)에서 자세하게 설명합니다.
 
 <br>티스토리 인증에 성공하면, 기본적으로 글을 발행할 티스토리 블로그를 선택합니다.
+
 <img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193435623-e6b68146-609a-49ab-8a54-02c1775bfa8d.png">
 
 <br>
@@ -33,15 +34,19 @@
 ## 티스토리에 글 발행하는 방법
 
 글을 작성한 에디터 창에서 명령어 팔레트(`Cmd + P`)를 실행하고, "Tistory: Publish to Tistory"를 선택합니다.
+
 <img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193435836-72ba5abd-821d-403c-ac99-f049f129067e.png">
 
-> 티스토리 글 발행을 더 간편하게 사용하고 싶으면 해당 명령어에 단축키를 지정하면 됩니다. 단축키를 지정하는 방법은 [단축키 지정하기](#단축키_지정하기)에서 설명합니다.
+> 티스토리 글 발행을 더 간편하게 사용하고 싶으면 해당 명령어에 단축키를 지정하면 됩니다. 단축키를 지정하는 방법은 [단축키 지정하기](#단축키-지정하기)에서 설명합니다.
 
 <br>그 다음 "티스토리 글 발행" 모달 팝업이 나타나면 속성을 확인하고 "발행하기" 버튼을 선택합니다.
+
 <img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193435877-6066154d-5d13-4220-a8da-570f8ce4983c.png">
 
 티스토리 글 업로드가 성공하면 메타데이터가 프론트매터(Frontmatter)에 자동 추가됩니다.
+
 <img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193435956-07421a59-37d7-44df-ae8e-0e3074eb5c2a.png">
+
 자동으로 추가된 프론트매터는 글을 수정할 때 사용되는 데이터이므로 절대 삭제하면 안됩니다. 프론트매터에 추가된 데이터 속성에 대해서는 바래 아래에서 다시 설명합니다.
 
 ### 프론트메터
@@ -57,7 +62,8 @@
 
 ### 단축키 지정하기
 
-단축키를 지정하고 싶으면 옵시디언 설정 > 단축키에서 "Tistory: Publish to Tistory"를 찾아 원하는 단축키를 설정합니다. 저는 `Cmd` + `T`로 설정하였습니다.
+단축키를 지정하고 싶으면 옵시디언 설정 > 단축키에서 "Tistory: Publish to Tistory"를 찾아 원하는 단축키를 설정합니다.
+
 <img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193435868-522a8c0b-a61d-4647-83a3-0371d5c5fc0d.png">
 
 <br>
@@ -70,10 +76,6 @@
 
 CallBack에는 반드시 `obsidian://tistory-oauth`를 입력해주세요.<br>
 앱 생성 후 발급받은 `App ID`와 `Secret Key`를 옵시디언 티스토리 플러그인에 입력합니다.
-
-<br>
-
----
 
 <br>
 
