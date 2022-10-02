@@ -12,7 +12,7 @@ import { TistoryAuthStorage } from '~/helper/storage';
 import { requestTistoryAccessToken, createTistoryAuthUrl, requestTistoryAccessTokenToVercel } from '~/tistory';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {
-  authType: AuthType.USE_MY_TISTORY_APP,
+  authType: AuthType.EASY_AUTHENTICATION,
   appId: '',
   secretKey: '',
 };
@@ -68,15 +68,17 @@ export default class TistorySettingTab extends PluginSettingTab {
       });
     }
 
+    // 내 블로그 목록 가져오기
     this.plugin.createTistoryClient(accessToken);
-    // TODO: 블로그 가져오기
+    const { blogs } = await this.plugin.tistoryClient.getBlogs();
 
     // 토큰값 저장
     TistoryAuthStorage.saveTistoryAuthInfo({
       accessToken,
-      selectedBlog: '',
+      selectedBlog: blogs?.[0].name ?? '',
     });
 
+    // 인증 모달 닫기
     this.handleTistoryAuthModalClose(true);
   }
 
