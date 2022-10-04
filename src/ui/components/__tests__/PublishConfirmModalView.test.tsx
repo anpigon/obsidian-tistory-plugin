@@ -5,7 +5,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import PublishConfirmModalView, { PostOptions } from '~/ui/components/PublishConfirmModalView';
+import PublishConfirmModalView, { PostOptions } from '~/ui/components/PublishConfirmModal';
 import TistoryPlugin from '~/TistoryPlugin';
 import TistoryClient from '~/tistory/TistoryClient';
 
