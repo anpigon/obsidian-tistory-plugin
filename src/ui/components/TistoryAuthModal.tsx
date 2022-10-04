@@ -59,6 +59,7 @@ export default class TistoryAuthModal extends Modal {
     linkEl.onclick = () => {
       this.clearInterval();
       this.secondsLeft = 0;
+      // `Please complete authentication at tistory.com; Opening browser in ${this.secondsLeft} seconds...`
       this.updateText();
     };
 
@@ -70,10 +71,7 @@ export default class TistoryAuthModal extends Modal {
     return noWaitDiv;
   }
 
-  private updateText() {
-    this.timerDiv.setText(
-      // `Please complete authentication at tistory.com; Opening browser in ${this.secondsLeft} seconds...`
-      `티스토리에서 인증을 완료해주세요. ${this.secondsLeft}초 후에 브라우저 열기...`,
-    );
+  public updateText(text?: string) {
+    this.timerDiv.setText(text ?? `티스토리에서 인증을 완료해주세요. ${this.secondsLeft}초 후에 브라우저 열기...`);
   }
 }
