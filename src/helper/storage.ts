@@ -2,7 +2,7 @@ import { TISTORY_LOCAL_STORAGE_KEY } from '~/constants';
 
 export interface TistoryAuthInfo {
   accessToken: string | null;
-  selectedBlog: string | null;
+  selectedBlog?: string | null;
 }
 
 export class TistoryAuthStorage {
