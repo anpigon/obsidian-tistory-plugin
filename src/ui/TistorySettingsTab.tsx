@@ -58,14 +58,11 @@ export default class TistorySettingTab extends PluginSettingTab {
     this.handleTistoryAuthModalClose();
   }
 
-  // 티스토리 인증 요청 모달팝업 오픈
-  handleTistoryAuthModalOpen(callback?: (ok: boolean) => void) {
+  // 티스토리 인증 요청 모달 팝업 오픈
+  handleTistoryAuthModalOpen(callback: () => void) {
     const state = (this.state = Date.now().toString(36));
     const authLink = createTistoryAuthUrl({ clientId: TISTORY_CLIENT_ID, state });
-    this.authModal = new TistoryAuthModal(this.plugin.app, authLink, async () => {
-      // 모달 팝업이 닫히면 인증 성공 여부를 콜백 함수로 전달
-      callback?.(Boolean(this.authModal?.isSuccess));
-    });
+    this.authModal = new TistoryAuthModal(this.plugin.app, authLink, callback);
     this.authModal.open();
   }
 

@@ -11,7 +11,7 @@ export default class TistoryAuthModal extends Modal {
   private intervalId: NodeJS.Timeout | null = null;
   isSuccess: boolean;
 
-  constructor(app: App, private readonly authLink: string, private readonly afterClose?: () => Promise<void>) {
+  constructor(app: App, private readonly authLink: string, private readonly afterClose: () => void) {
     super(app);
   }
 
@@ -51,9 +51,7 @@ export default class TistoryAuthModal extends Modal {
   async onClose(): Promise<void> {
     this.clearInterval();
     this.opened = false;
-    if (this.afterClose) {
-      await this.afterClose();
-    }
+    this.afterClose();
   }
 
   private addNoWaitDiv(interval: NodeJS.Timeout) {

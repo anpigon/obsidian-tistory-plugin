@@ -8,7 +8,7 @@ import { Blog } from '~/tistory/types';
 
 type Props = {
   plugin: TistoryPlugin;
-  onAuth(callback: (ok: boolean) => void): void;
+  onAuth(callback: () => void): void;
 };
 
 const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
@@ -18,8 +18,8 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
 
   const handleLogin = () => {
     // 인증을 시도하고 인증 성공 여부을 콜백 함수로 받는다.
-    onAuth((isSuccess) => {
-      setIsLoggedIn(isSuccess);
+    onAuth(() => {
+      setIsLoggedIn(Boolean(TistoryAuthStorage.loadTistoryAuthInfo()?.accessToken));
     });
   };
 
