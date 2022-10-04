@@ -8,7 +8,7 @@ import TistoryAuthModal from './components/TistoryAuthModal';
 import SettingForm from './components/SettingForm';
 import { TistoryPluginSettings } from '~/types';
 import { TistoryAuthStorage } from '~/helper/storage';
-import { createTistoryAuthUrl, requestTistoryAccessTokenToVercel } from '~/tistory/TistoryAuth';
+import { createTistoryAuthUrl, requestTistoryAccessToken } from '~/tistory/TistoryAuth';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {};
 
@@ -50,7 +50,7 @@ export default class TistorySettingTab extends PluginSettingTab {
 
   /** 티스토리 accessToken을 요청 */
   async handleTistoryAuthCallback(code: string) {
-    const accessToken = await requestTistoryAccessTokenToVercel(code);
+    const accessToken = await requestTistoryAccessToken(code);
 
     // 내 블로그 목록 가져오기
     this.plugin.createTistoryClient(accessToken);
