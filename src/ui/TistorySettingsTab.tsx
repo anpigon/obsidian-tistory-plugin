@@ -31,7 +31,7 @@ export default class TistorySettingTab extends PluginSettingTab {
         // 오류가 발생한 경우 HTTP 오류 응답과 함께 오류 메시지가 응답값으로 옵니다.
         // error={error}&error_description={error-description}
         console.warn(params);
-        this.handleTistoryAuthModalClose(false);
+        this.handleTistoryAuthModalClose();
         const errorMessage = params.error_description?.replace(/_/g, ' ') ?? params.error;
         new Notice(`Authentication failed with error:\n${errorMessage}`);
         return;
@@ -39,7 +39,7 @@ export default class TistorySettingTab extends PluginSettingTab {
 
       const { code, state } = params;
       if (state !== this.state) {
-        this.handleTistoryAuthModalClose(false);
+        this.handleTistoryAuthModalClose();
         new Notice('Authentication failed with error: bad request');
         return;
       }
@@ -51,19 +51,11 @@ export default class TistorySettingTab extends PluginSettingTab {
   /** 티스토리 accessToken을 요청 */
   async handleTistoryAuthCallback(code: string) {
     const accessToken = await requestTistoryAccessToken(code);
-
-    // 내 블로그 목록 가져오기
+    TistoryAuthStorage.saveTistoryAuthInfo({ accessToken });
     this.plugin.createTistoryClient(accessToken);
-    const { blogs } = await this.plugin.tistoryClient.getBlogs();
-
-    // 토큰값 저장
-    TistoryAuthStorage.saveTistoryAuthInfo({
-      accessToken,
-      selectedBlog: blogs?.[0].name ?? '',
-    });
 
     // 인증 모달 닫기
-    this.handleTistoryAuthModalClose(true);
+    this.handleTistoryAuthModalClose();
   }
 
   // 티스토리 인증 요청 모달팝업 오픈
@@ -77,9 +69,8 @@ export default class TistorySettingTab extends PluginSettingTab {
     this.authModal.open();
   }
 
-  handleTistoryAuthModalClose(isSuccess: boolean) {
+  handleTistoryAuthModalClose() {
     if (this.authModal) {
-      this.authModal.isSuccess = isSuccess;
       this.authModal.close();
       this.authModal = undefined;
     }

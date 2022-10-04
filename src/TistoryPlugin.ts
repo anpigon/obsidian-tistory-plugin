@@ -6,7 +6,7 @@ import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
 import { TistoryAuthStorage } from '~/helper/storage';
 import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
 import { UpdatePostParams, UpdatePostResponse } from './tistory/types';
-import { PostOptions } from '~/ui/components/PublishConfirmModal';
+import { PostOptions } from '~/ui/components/PublishConfirm';
 import TistoryError from './tistory/TistoryError';
 import Publisher from './helper/publisher';
 
