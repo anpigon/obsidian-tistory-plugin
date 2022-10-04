@@ -2,7 +2,6 @@ import { MarkdownView, Notice, Plugin, stringifyYaml } from 'obsidian';
 
 import { TistoryPluginSettings } from '~/types';
 import TistoryClient from '~/tistory/TistoryClient';
-import { VIEW_TYPE } from '~/ui/TistoryPostsView';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
 import { TistoryAuthStorage } from '~/helper/storage';
 import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
@@ -45,31 +44,8 @@ export default class TistoryPlugin extends Plugin {
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new TistorySettingTab(this));
 
-    // Register Tistory View
-    // this.registerView(VIEW_TYPE, leaf => new TistoryPostsView(leaf, this));
-
-    // Event Listeners
-    // this.app.workspace.onLayoutReady(async () => {
-    //   // if (this.settings.openViewOnStart) {
-    //   await this.openTistoryLeaf(true);
-    //   // }
-    // });
-
     this.createTistoryClient(TistoryAuthStorage.loadTistoryAuthInfo()?.accessToken);
   }
-
-  openTistoryLeaf = async (showAfterAttach: boolean) => {
-    const leafs = this.app.workspace.getLeavesOfType(VIEW_TYPE);
-    if (leafs.length == 0) {
-      // Needs to be mounted
-      const leaf = this.app.workspace.getLeftLeaf(false);
-      await leaf.setViewState({ type: VIEW_TYPE });
-      if (showAfterAttach) this.app.workspace.revealLeaf(leaf);
-    } else {
-      // Already mounted - needs to be revealed
-      leafs.forEach((leaf) => this.app.workspace.revealLeaf(leaf));
-    }
-  };
 
   onunload() {}
 
