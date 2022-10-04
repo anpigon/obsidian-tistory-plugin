@@ -44,7 +44,9 @@ export default class TistoryPlugin extends Plugin {
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new TistorySettingTab(this));
 
-    this.createTistoryClient(TistoryAuthStorage.loadTistoryAuthInfo()?.accessToken);
+    if (TistoryAuthStorage.loadTistoryAuthInfo()) {
+      this.createTistoryClient(TistoryAuthStorage.loadTistoryAuthInfo()?.accessToken);
+    }
   }
 
   onunload() {}
@@ -59,7 +61,7 @@ export default class TistoryPlugin extends Plugin {
 
   async publishTistory() {
     if (!this.#tistoryClient) {
-      new Notice('티스토리 인증이 필요합니다.');
+      new Notice('티스토리 설정에서 [인증하기] 버튼을 눌러주세요.');
       return;
     }
 
