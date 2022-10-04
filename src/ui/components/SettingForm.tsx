@@ -3,7 +3,6 @@ import React, { ChangeEventHandler, useEffect, useState } from 'react';
 import { TISTORY_LOCAL_STORAGE_KEY } from '~/constants';
 import TistoryPlugin from '~/TistoryPlugin';
 import SettingItem from './SettingItem';
-import TistoryClient from '~/tistory/TistoryClient';
 import { TistoryAuthStorage } from '~/helper/storage';
 import { Blog } from '~/tistory/types';
 
@@ -13,28 +12,27 @@ type Props = {
 };
 
 const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
-  const [isLogged, setIsLogged] = useState(Boolean(localStorage.getItem(TISTORY_LOCAL_STORAGE_KEY)));
+  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem(TISTORY_LOCAL_STORAGE_KEY)));
   const [selectedBlog, setSelectedBlog] = useState('');
   const [blogs, setBlogs] = useState<Blog[]>();
 
   const handleLogin = () => {
     // 인증을 시도하고 인증 성공 여부을 콜백 함수로 받는다.
     onAuth((isSuccess) => {
-      setIsLogged(isSuccess);
+      setIsLoggedIn(isSuccess);
     });
   };
 
   const handleLogout = () => {
     TistoryAuthStorage.clearTistoryAuthInfo();
-    setIsLogged(false);
+    setIsLoggedIn(false);
   };
 
   const loadAuthInfo = async () => {
     const accessInfo = TistoryAuthStorage.loadTistoryAuthInfo();
-    // TODO: 인증 실패하면 에러 메시지 출력후 재로그인 팝업 노출하기
     if (accessInfo?.accessToken) {
-      const client = new TistoryClient(accessInfo?.accessToken);
-      const { blogs } = await client.getBlogs();
+      plugin.createTistoryClient(accessInfo.accessToken);
+      const { blogs } = await plugin.tistoryClient.getBlogs();
       setBlogs(blogs);
       setSelectedBlog(accessInfo?.selectedBlog || blogs[0].name);
       if (!accessInfo.selectedBlog) {
@@ -44,10 +42,10 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   };
 
   useEffect(() => {
-    if (isLogged) {
+    if (isLoggedIn) {
       loadAuthInfo();
     }
-  }, [isLogged]);
+  }, [isLoggedIn]);
 
   const handleChangeBlog: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const value = event.target.value;
@@ -58,13 +56,13 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   return (
     <div className="tistory">
       <h2>티스토리(Tistory)</h2>
-      {!isLogged && (
+      {!isLoggedIn && (
         <SettingItem name="티스토리 인증" description="인증하기 버튼을 눌러 티스토리 인증을 해주세요.">
           <button onClick={handleLogin}>인증하기</button>
         </SettingItem>
       )}
 
-      {isLogged && (
+      {isLoggedIn && (
         <>
           <SettingItem name="티스토리 인증" description="인증을 해제하려면 로그아웃 버튼을 눌러주세요">
             <button onClick={handleLogout} className="mod-warning">
