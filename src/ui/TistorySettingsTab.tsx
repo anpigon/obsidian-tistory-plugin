@@ -50,6 +50,8 @@ export default class TistorySettingTab extends PluginSettingTab {
 
   /** 티스토리 accessToken을 요청 */
   async handleTistoryAuthCallback(code: string) {
+    this.#authModal?.updateText('티스토리 인증에 성공했습니다. 모달창은 잠시 후 자동으로 닫힙니다.');
+
     const accessToken = await requestTistoryAccessToken(code);
     TistoryAuthStorage.saveTistoryAuthInfo({ accessToken });
     this.plugin.createTistoryClient(accessToken);
