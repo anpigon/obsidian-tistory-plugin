@@ -11,6 +11,10 @@ export class TistoryAuthStorage {
     return data ? (JSON.parse(data) as TistoryAuthInfo) : null;
   }
 
+  static getAccessToken(): string | null {
+    return this.loadTistoryAuthInfo()?.accessToken ?? null;
+  }
+
   static saveTistoryAuthInfo(tistoryInfo: TistoryAuthInfo) {
     return localStorage.setItem(TISTORY_LOCAL_STORAGE_KEY, JSON.stringify(tistoryInfo));
   }

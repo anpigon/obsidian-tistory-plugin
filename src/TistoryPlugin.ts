@@ -44,8 +44,8 @@ export default class TistoryPlugin extends Plugin {
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new TistorySettingTab(this));
 
-    if (TistoryAuthStorage.loadTistoryAuthInfo()) {
-      this.createTistoryClient(TistoryAuthStorage.loadTistoryAuthInfo()?.accessToken);
+    if (TistoryAuthStorage.getAccessToken()) {
+      this.createTistoryClient(TistoryAuthStorage.getAccessToken());
     }
   }
 
