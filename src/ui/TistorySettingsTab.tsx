@@ -14,16 +14,16 @@ export const DEFAULT_SETTINGS: TistoryPluginSettings = {};
 
 export default class TistorySettingTab extends PluginSettingTab {
   #root: Root | null;
-  authModal?: TistoryAuthModal;
-  state: string;
+  #authModal?: TistoryAuthModal;
+  #state: string;
 
   constructor(private readonly plugin: TistoryPlugin) {
     super(plugin.app, plugin);
-    this.state = '';
+    this.#state = '';
 
     // 티스토리 인증 콜팩 URL 프로토콜 리스닝 핸들러
     this.plugin.registerObsidianProtocolHandler('tistory-oauth', (params) => {
-      if (!this.authModal || !this.authModal.isOpen) {
+      if (!this.#authModal || !this.#authModal.isOpen) {
         return;
       }
 
@@ -38,7 +38,7 @@ export default class TistorySettingTab extends PluginSettingTab {
       }
 
       const { code, state } = params;
-      if (state !== this.state) {
+      if (state !== this.#state) {
         this.handleTistoryAuthModalClose();
         new Notice('Authentication failed with error: bad request');
         return;
@@ -60,16 +60,16 @@ export default class TistorySettingTab extends PluginSettingTab {
 
   // 티스토리 인증 요청 모달 팝업 오픈
   handleTistoryAuthModalOpen(callback: () => void) {
-    const state = (this.state = Date.now().toString(36));
+    const state = (this.#state = Date.now().toString(36));
     const authLink = createTistoryAuthUrl({ clientId: TISTORY_CLIENT_ID, state });
-    this.authModal = new TistoryAuthModal(this.plugin.app, authLink, callback);
-    this.authModal.open();
+    this.#authModal = new TistoryAuthModal(this.plugin.app, authLink, callback);
+    this.#authModal.open();
   }
 
   handleTistoryAuthModalClose() {
-    if (this.authModal) {
-      this.authModal.close();
-      this.authModal = undefined;
+    if (this.#authModal) {
+      this.#authModal.close();
+      this.#authModal = undefined;
     }
   }
 
