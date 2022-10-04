@@ -17,6 +17,12 @@
 	"standard-version": {
 		"t": ""
 	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "yarn lint",
+			"pre-push": "npm test"
+		}
+	},
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"test": "jest",
