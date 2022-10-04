@@ -3,19 +3,14 @@ import { Notice, PluginSettingTab } from 'obsidian';
 import { createRoot, Root } from 'react-dom/client';
 
 import TistoryPlugin from '~/TistoryPlugin';
-import { ENCRYPTED_PASSWORD, TISTORY_CLIENT_ID } from '~/constants';
+import { TISTORY_CLIENT_ID } from '~/constants';
 import TistoryAuthModal from './components/TistoryAuthModal';
 import SettingForm from './components/SettingForm';
-import { AuthType, TistoryPluginSettings } from '~/types';
-import { decrypt } from '~/helper/encrypt';
+import { TistoryPluginSettings } from '~/types';
 import { TistoryAuthStorage } from '~/helper/storage';
-import { requestTistoryAccessToken, createTistoryAuthUrl, requestTistoryAccessTokenToVercel } from '~/tistory';
+import { createTistoryAuthUrl, requestTistoryAccessTokenToVercel } from '~/tistory';
 
-export const DEFAULT_SETTINGS: TistoryPluginSettings = {
-  authType: AuthType.EASY_AUTHENTICATION,
-  appId: '',
-  secretKey: '',
-};
+export const DEFAULT_SETTINGS: TistoryPluginSettings = {};
 
 export default class TistorySettingTab extends PluginSettingTab {
   #root: Root | null;
@@ -55,18 +50,7 @@ export default class TistorySettingTab extends PluginSettingTab {
 
   /** 티스토리 accessToken을 요청 */
   async handleTistoryAuthCallback(code: string) {
-    const { authType } = this.plugin.settings;
-    let accessToken = '';
-
-    if (authType === AuthType.EASY_AUTHENTICATION) {
-      accessToken = await requestTistoryAccessTokenToVercel(code);
-    } else if (authType === AuthType.USE_MY_TISTORY_APP) {
-      accessToken = await requestTistoryAccessToken({
-        code,
-        clientId: this.plugin.settings.appId,
-        clientSecretKey: await decrypt(this.plugin.settings.secretKey, ENCRYPTED_PASSWORD),
-      });
-    }
+    const accessToken = await requestTistoryAccessTokenToVercel(code);
 
     // 내 블로그 목록 가져오기
     this.plugin.createTistoryClient(accessToken);
@@ -82,20 +66,10 @@ export default class TistorySettingTab extends PluginSettingTab {
     this.handleTistoryAuthModalClose(true);
   }
 
-  getClientId() {
-    if (this.plugin.settings.authType === AuthType.USE_MY_TISTORY_APP) {
-      return this.plugin.settings.appId;
-    } else {
-      return TISTORY_CLIENT_ID;
-    }
-  }
-
   // 티스토리 인증 요청 모달팝업 오픈
   handleTistoryAuthModalOpen(callback?: (ok: boolean) => void) {
     const state = (this.state = Date.now().toString(36));
-    const clientId = this.getClientId();
-    const authLink = createTistoryAuthUrl({ clientId, state });
-
+    const authLink = createTistoryAuthUrl({ clientId: TISTORY_CLIENT_ID, state });
     this.authModal = new TistoryAuthModal(this.plugin.app, authLink, async () => {
       // 모달 팝업이 닫히면 인증 성공 여부를 콜백 함수로 전달
       callback?.(Boolean(this.authModal?.isSuccess));

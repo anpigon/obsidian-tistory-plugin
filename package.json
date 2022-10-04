@@ -72,7 +72,6 @@
 		"markdown-it-task-checkbox": "^1.0.6",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"rfc4648": "^1.5.2",
 		"styled-components": "^5.3.5",
 		"whatwg-fetch": "^3.6.2"
 	}
