@@ -8,7 +8,7 @@ import TistoryAuthModal from './components/TistoryAuthModal';
 import SettingForm from './components/SettingForm';
 import { TistoryPluginSettings } from '~/types';
 import { TistoryAuthStorage } from '~/helper/storage';
-import { createTistoryAuthUrl, requestTistoryAccessTokenToVercel } from '~/tistory';
+import { createTistoryAuthUrl, requestTistoryAccessTokenToVercel } from '~/tistory/TistoryAuth';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {};
 
