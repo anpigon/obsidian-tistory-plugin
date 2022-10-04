@@ -5,7 +5,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import PublishConfirmModalView, { PostOptions } from '~/ui/components/PublishConfirmModal';
+import PublishConfirmModal, { PostOptions } from '~/ui/components/PublishConfirmModal';
 import TistoryPlugin from '~/TistoryPlugin';
 import TistoryClient from '~/tistory/TistoryClient';
 
@@ -20,7 +20,7 @@ describe('<PublishConfirmModalView />', () => {
 
   it('should render the confirm modalEl', () => {
     const { container } = render(
-      <PublishConfirmModalView
+      <PublishConfirmModal
         plugin={pluginMock}
         blogName={blogName}
         options={options}
