@@ -9,6 +9,7 @@ const md = new MarkdownIt({
   linkify: true,
   typographer: true,
 })
+  .use(require('markdown-it-mark'))
   .use(require('markdown-it-footnote'))
   .use(require('markdown-it-mathjax3'), {
     tex: {
