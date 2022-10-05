@@ -34,9 +34,9 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
       plugin.createTistoryClient(accessInfo.accessToken);
       const { blogs } = await plugin.tistoryClient.getBlogs();
       setBlogs(blogs);
-      setSelectedBlog(accessInfo?.selectedBlog || blogs[0].name);
-      if (!accessInfo.selectedBlog) {
-        TistoryAuthStorage.updateTistoryAuthInfo({ selectedBlog: blogs[0].name });
+      setSelectedBlog(accessInfo?.defaultBlogName || blogs[0].name);
+      if (!accessInfo.defaultBlogName) {
+        TistoryAuthStorage.updateTistoryAuthInfo({ defaultBlogName: blogs[0].name });
       }
     }
   };
@@ -50,7 +50,7 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
   const handleChangeBlog: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const value = event.target.value;
     setSelectedBlog(value);
-    TistoryAuthStorage.updateTistoryAuthInfo({ selectedBlog: value });
+    TistoryAuthStorage.updateTistoryAuthInfo({ defaultBlogName: value });
   };
 
   return (

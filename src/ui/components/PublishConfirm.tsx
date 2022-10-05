@@ -1,30 +1,30 @@
 import React, { ChangeEvent, PropsWithChildren, useEffect, useState, useRef } from 'react';
-import { Category, Post } from '~/tistory/types';
+import { Category, Post, UpdatePostParams } from '~/tistory/types';
 import TistoryPlugin from '~/TistoryPlugin';
 import SettingItem from './SettingItem';
 import { TistoryAuthStorage } from '~/helper/storage';
 
-export type PostOptions = Partial<{
+export type PostOptions = {
   tistoryBlogName: string;
-  tistoryPostId: string;
-  tistoryTitle: string;
-  tistoryVisibility: '0' | '1' | '3';
-  tistoryCategory: string;
-  tistoryTag: string;
-  tistoryPublished: string;
-  tistorySlogan: string;
-  tistoryAcceptComment: '0' | '1';
-  tistoryPostUrl: string;
-  title: string;
-  tag: string;
-}>;
+  tistoryPostId?: string;
+  tistoryTitle?: string;
+  tistoryVisibility?: '0' | '1' | '3';
+  tistoryCategory?: string;
+  tistoryTag?: string;
+  tistoryPublished?: string;
+  tistorySlogan?: string;
+  tistoryAcceptComment?: '0' | '1';
+  tistoryPostUrl?: string;
+  title?: string;
+  tag?: string;
+};
 
 type Props = PropsWithChildren<{
   plugin: TistoryPlugin;
   blogName: string;
   options: PostOptions;
   onClose(): void;
-  onPublish(result: PostOptions): void;
+  onPublish(result: UpdatePostParams): void;
 }>;
 
 const PublishConfirm: React.FC<Props> = (props) => {
@@ -34,7 +34,7 @@ const PublishConfirm: React.FC<Props> = (props) => {
   const tistoryBlogName = useRef(blogName);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const [tistoryTitle, setTistoryTitle] = useState(options?.tistoryTitle);
+  const [tistoryTitle, setTistoryTitle] = useState(options?.tistoryTitle ?? '');
   const [tistoryVisibility, setTistoryVisibility] = useState<Post['visibility']>(options?.tistoryVisibility ?? '3'); // 발행상태 (0: 비공개, 1: 공개(보호), 3: 공개)
   const [tistoryCategory, setTistoryCategory] = useState<string>(options?.tistoryCategory ?? '0'); // category: 카테고리 아이디 (기본값: 0)
 
@@ -51,12 +51,13 @@ const PublishConfirm: React.FC<Props> = (props) => {
   };
 
   const handlePublish = () => {
-    onPublish({
-      tistoryBlogName: tistoryBlogName.current,
-      tistoryVisibility,
-      tistoryCategory,
-      tistoryTitle,
-    });
+    const postParams: UpdatePostParams = {
+      blogName: tistoryBlogName.current,
+      title: tistoryTitle,
+      visibility: tistoryVisibility,
+      category: tistoryCategory,
+    };
+    onPublish(postParams);
   };
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const PublishConfirm: React.FC<Props> = (props) => {
         const { blogs } = await tistoryClient.getBlogs();
         tistoryBlogName.current = blogs[0].name;
         if (tistoryBlogName.current) {
-          TistoryAuthStorage.updateTistoryAuthInfo({ selectedBlog: tistoryBlogName.current });
+          TistoryAuthStorage.updateTistoryAuthInfo({ defaultBlogName: tistoryBlogName.current });
         }
       }
 

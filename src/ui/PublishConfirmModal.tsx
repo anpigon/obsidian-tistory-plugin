@@ -1,24 +1,42 @@
-import { Modal } from 'obsidian';
+import { Modal, TFile } from 'obsidian';
 import React from 'react';
 import { createRoot, Root } from 'react-dom/client';
+import { TistoryAuthStorage } from '~/helper/storage';
+import { UpdatePostParams } from '~/tistory/types';
 
 import TistoryPlugin from '~/TistoryPlugin';
 import PublishConfirm, { PostOptions } from '~/ui/components/PublishConfirm';
 
 export class PublishConfirmModal extends Modal {
   #root: Root | null;
+  #options: PostOptions;
 
   constructor(
     private readonly plugin: TistoryPlugin,
-    private readonly blogName: string,
-    private readonly options: PostOptions,
-    private callback: (result: PostOptions) => void,
+    private readonly file: TFile,
+    private callback: (postParams: UpdatePostParams) => void,
   ) {
     super(plugin.app);
+
+    const options = { ...this.app.metadataCache.getFileCache(this.file)?.frontmatter } as PostOptions;
+    this.#options = {
+      tistoryBlogName: options?.tistoryBlogName || TistoryAuthStorage.getDefaultBlogId() || '',
+      tistoryVisibility: options?.tistoryVisibility,
+      tistoryCategory: options?.tistoryCategory,
+      tistoryTitle: options?.tistoryTitle || options?.title || this.file.basename,
+      tistoryTag: options?.tistoryTag || options?.tag,
+      tistoryPostId: options?.tistoryPostId,
+    };
   }
 
-  handlePublish(result: PostOptions) {
-    this.callback(result);
+  handlePublish(postParams: UpdatePostParams) {
+    this.callback({
+      postId: this.#options.tistoryPostId,
+      blogName: postParams.blogName,
+      title: postParams.title,
+      visibility: postParams.visibility,
+      category: postParams.category,
+    });
     this.close();
   }
 
@@ -35,10 +53,10 @@ export class PublishConfirmModal extends Modal {
     this.#root.render(
       <PublishConfirm
         plugin={this.plugin}
-        blogName={this.blogName}
-        options={this.options}
+        blogName={this.#options.tistoryBlogName}
+        options={this.#options}
         onClose={() => this.close()}
-        onPublish={(result: PostOptions) => this.handlePublish(result)}
+        onPublish={(postParams: UpdatePostParams) => this.handlePublish(postParams)}
       />,
     );
   }

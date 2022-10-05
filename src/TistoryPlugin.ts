@@ -1,12 +1,11 @@
-import { MarkdownView, Notice, Plugin, stringifyYaml } from 'obsidian';
+import { MarkdownView, Notice, Plugin, stringifyYaml, TFile } from 'obsidian';
 
 import { TistoryPluginSettings } from '~/types';
 import TistoryClient from '~/tistory/TistoryClient';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
 import { TistoryAuthStorage } from '~/helper/storage';
 import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
-import { UpdatePostParams, UpdatePostResponse } from './tistory/types';
-import { PostOptions } from '~/ui/components/PublishConfirm';
+import { UpdatePostResponse } from './tistory/types';
 import TistoryError from './tistory/TistoryError';
 import Publisher from './helper/publisher';
 
@@ -67,68 +66,37 @@ export default class TistoryPlugin extends Plugin {
 
     const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (!activeView) {
-      new Notice('열려있는 노트가 없습니다.');
+      new Notice('열려있는 노트가 없습니다. 파일을 열고 다시 시도해주세요.'); // No file is open/active. Please open a file and try again.
       return;
     }
 
     const fileContent = await app.vault.cachedRead(activeView.file);
     if (fileContent !== activeView.data) {
-      new Notice('파일을 저장하고 다시 시도해주세요.');
+      new Notice('파일의 변경사항이 저장되지 않았습니다. 파일을 저장하고 다시 시도해주세요.');
       return;
     }
 
     try {
-      const frontMatter = { ...this.app.metadataCache.getFileCache(activeView.file)?.frontmatter };
-      const content = fileContent.slice(frontMatter.position?.end.offset ?? 0);
-      delete frontMatter.position;
-
-      const tistoryAuthInfo = TistoryAuthStorage.loadTistoryAuthInfo();
-      const postOptions = frontMatter as PostOptions;
-      const blogName = postOptions?.tistoryBlogName || tistoryAuthInfo?.selectedBlog || '';
-      const options = {
-        tistoryVisibility: postOptions?.tistoryVisibility,
-        tistoryCategory: postOptions?.tistoryCategory,
-        tistoryTitle: postOptions?.tistoryTitle || postOptions?.title || activeView.file.basename,
-        tistoryTag: postOptions?.tistoryTag || postOptions?.tag,
-      } as PostOptions;
-
-      new PublishConfirmModal(this, blogName, options, async (result) => {
-        const publisher = new Publisher(this.app);
-        const addPostParams = {
-          blogName: result.tistoryBlogName,
-          title: result.tistoryTitle || options.tistoryTitle,
-          visibility: result.tistoryVisibility,
-          category: result.tistoryCategory,
-          content: await publisher.generateHtml(content, activeView.file.path),
-          ...(postOptions?.tistoryPostId && { postId: postOptions.tistoryPostId }),
-        } as UpdatePostParams;
-
+      new PublishConfirmModal(this, activeView.file, async (postParams) => {
         try {
-          let response: UpdatePostResponse;
-          if (postOptions?.tistoryPostId) {
-            // 기존 글 수정
-            response = await this.#tistoryClient.modifyPost(addPostParams);
-          } else {
-            // 글 새로 등록
-            response = await this.#tistoryClient.writePost(addPostParams);
-          }
-
-          const newFrontMatter = {
-            ...frontMatter,
-            tistoryBlogName: addPostParams.blogName,
-            tistoryTitle: addPostParams.title,
-            tistoryVisibility: addPostParams.visibility,
-            tistoryCategory: addPostParams.category,
+          const content = await new Publisher(this.app).generateHtml(activeView.file);
+          const response: UpdatePostResponse = await this.#tistoryClient.writeOrModifyPost({
+            ...postParams,
+            content,
+          });
+          await this.updateFile(activeView.file, {
+            tistoryBlogName: postParams.blogName,
+            tistoryTitle: postParams.title,
+            tistoryVisibility: postParams.visibility,
+            tistoryCategory: postParams.category,
             tistoryPostId: response.postId,
             tistoryPostUrl: response.url,
-          };
-          const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---${content}`;
-          await this.app.vault.modify(activeView.file, newFileContent);
+          });
           new Notice(`티스토리에 글이 발행되었습니다.`);
         } catch (err) {
           console.warn(err);
           if (err instanceof TistoryError && err.message === '게시글 정보가 존재하지 않습니다.') {
-            new Notice(`${err.message}(postId=${postOptions?.tistoryPostId})`);
+            new Notice(`${err.message}(postId=${postParams.postId})`);
           } else {
             new Notice((err as Error).toString());
           }
@@ -137,5 +105,18 @@ export default class TistoryPlugin extends Plugin {
     } catch (error) {
       new Notice((error as Error).toString());
     }
+  }
+
+  async updateFile(file: TFile, addFrontMatter: Record<string, string | undefined>): Promise<void> {
+    const cachedFrontMatter = { ...this.app.metadataCache.getFileCache(file)?.frontmatter };
+    const fileContent = await app.vault.cachedRead(file);
+    const contentBody = fileContent.slice(cachedFrontMatter?.position?.end.offset ?? 0);
+    delete cachedFrontMatter.position;
+    const newFrontMatter = {
+      ...cachedFrontMatter,
+      ...addFrontMatter,
+    };
+    const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---${contentBody}`;
+    return await this.app.vault.modify(file, newFileContent);
   }
 }

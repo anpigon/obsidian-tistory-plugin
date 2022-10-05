@@ -2,7 +2,7 @@ import { TISTORY_LOCAL_STORAGE_KEY } from '~/constants';
 
 export interface TistoryAuthInfo {
   accessToken: string | null;
-  selectedBlog?: string | null;
+  defaultBlogName?: string | null;
 }
 
 export class TistoryAuthStorage {
@@ -13,6 +13,9 @@ export class TistoryAuthStorage {
 
   static getAccessToken(): string | null {
     return this.loadTistoryAuthInfo()?.accessToken ?? null;
+  }
+  static getDefaultBlogId(): string | null {
+    return this.loadTistoryAuthInfo()?.defaultBlogName ?? null;
   }
 
   static saveTistoryAuthInfo(tistoryInfo: TistoryAuthInfo) {

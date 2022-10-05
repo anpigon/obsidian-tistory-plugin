@@ -16,7 +16,9 @@ describe('<PublishConfirmModalView />', () => {
     tistoryClient: new TistoryClient(''),
   } as any as TistoryPlugin;
   const blogName = 'anpigon';
-  const options: PostOptions = {};
+  const options: PostOptions = {
+    tistoryBlogName: 'anpigon',
+  };
 
   it('should render the confirm modalEl', () => {
     const { container } = render(

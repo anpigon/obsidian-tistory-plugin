@@ -109,6 +109,13 @@ export default class TistoryClient {
     return await this.uploadPost('modify', params);
   }
 
+  async writeOrModifyPost(params: UpdatePostParams) {
+    if (params.postId) {
+      return await this.modifyPost(params);
+    }
+    return await this.writePost(params);
+  }
+
   createFormData(params: UpdatePostParams) {
     const formData = new FormData();
     formData.append('blogName', params.blogName);

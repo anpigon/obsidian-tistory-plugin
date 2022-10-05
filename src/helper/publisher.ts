@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { App, getLinkpath, Notice } from 'obsidian';
+import { App, getLinkpath, Notice, TFile } from 'obsidian';
 import { markdownToHtml } from './markdown';
 
 export default class Publisher {
@@ -10,11 +10,13 @@ export default class Publisher {
 
   constructor(private readonly app: App) {}
 
-  async generateHtml(content: string, path: string): Promise<string> {
-    let result = content.toString();
+  async generateHtml(file: TFile): Promise<string> {
+    const frontMatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
+    const fileContent = await app.vault.cachedRead(file);
+    let result = fileContent.slice(frontMatter?.position?.end.offset ?? 0);
     result = await this.removeObsidianComments(result);
-    result = await this.renderDataViews(result, path);
-    result = await this.renderLinksToFullPath(result, path);
+    result = await this.renderDataViews(result);
+    result = await this.renderLinksToFullPath(result, file.basename);
     result = markdownToHtml(result);
     return result;
   }
@@ -23,7 +25,7 @@ export default class Publisher {
     return content.replace(/^\n?%%(.+?)%%\n?$/gms, '');
   }
 
-  async renderDataViews(text: string, path: string) {
+  async renderDataViews(text: string) {
     const dataViewRegex = /```dataview(.+?)```/gms;
     const matches = text.matchAll(dataViewRegex);
     if (!matches) return text;
