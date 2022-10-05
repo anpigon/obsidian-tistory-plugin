@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { App, getLinkpath, Notice, TFile } from 'obsidian';
+import { App, arrayBufferToBase64, getLinkpath, Notice, TFile } from 'obsidian';
 import { markdownToHtml } from './markdown';
 
 export default class Publisher {
@@ -16,7 +16,8 @@ export default class Publisher {
     let result = fileContent.slice(frontMatter?.position?.end.offset ?? 0);
     result = await this.removeObsidianComments(result);
     result = await this.renderDataViews(result);
-    result = await this.renderLinksToFullPath(result, file.basename);
+    result = await this.renderLinksToFullPath(result, file.path);
+    result = await this.createBase64Images(result, file.path);
     result = markdownToHtml(result);
     return result;
   }
@@ -93,5 +94,68 @@ export default class Publisher {
     }
 
     return result;
+  }
+
+  getExtension(linkedFile: TFile) {
+    //Markdown-it will not recognize jpg images. But putting png as the extension makes it work for some reason.
+    if (linkedFile.extension === 'jpg' || linkedFile.extension === 'jpeg') return 'png';
+    return linkedFile.extension;
+  }
+
+  async createBase64Images(text: string, filePath: string): Promise<string> {
+    let imageText = text;
+    const transcludedImageRegex = /!\[\[(.*?)(\.(png|jpg|jpeg|gif))\|(.*?)\]\]|!\[\[(.*?)(\.(png|jpg|jpeg|gif))\]\]/g;
+    const transcludedImageMatches = text.match(transcludedImageRegex);
+    if (transcludedImageMatches) {
+      for (let i = 0; i < transcludedImageMatches.length; i++) {
+        try {
+          const imageMatch = transcludedImageMatches[i];
+          const [imageName, size] = imageMatch
+            .substring(imageMatch.indexOf('[') + 2, imageMatch.indexOf(']'))
+            .split('|');
+          const imagePath = getLinkpath(imageName);
+          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
+          if (linkedFile) {
+            const image = await this.app.vault.readBinary(linkedFile);
+            const imageBase64 = arrayBufferToBase64(image);
+            const name = size ? `${imageName}|${size}` : imageName;
+            const imageMarkdown = `![${name}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
+            imageText = imageText.replace(imageMatch, imageMarkdown);
+          }
+        } catch {
+          continue;
+        }
+      }
+    }
+
+    const imageRegex = /!\[(.*?)\]\((.*?)(\.(png|jpg|jpeg|gif))\)/g;
+    const imageMatches = text.match(imageRegex);
+    if (imageMatches) {
+      for (let i = 0; i < imageMatches.length; i++) {
+        try {
+          const imageMatch = imageMatches[i];
+          const nameStart = imageMatch.indexOf('[') + 1;
+          const nameEnd = imageMatch.indexOf(']');
+          const imageName = imageMatch.substring(nameStart, nameEnd);
+          const pathStart = imageMatch.lastIndexOf('(') + 1;
+          const pathEnd = imageMatch.lastIndexOf(')');
+          const imagePath = imageMatch.substring(pathStart, pathEnd);
+          if (imagePath.startsWith('http')) {
+            continue;
+          }
+          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
+          if (linkedFile) {
+            const image = await this.app.vault.readBinary(linkedFile);
+            const imageBase64 = arrayBufferToBase64(image);
+            const imageMarkdown = `![${imageName}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
+            imageText = imageText.replace(imageMatch, imageMarkdown);
+          }
+        } catch {
+          continue;
+        }
+      }
+    }
+
+    return imageText;
   }
 }
