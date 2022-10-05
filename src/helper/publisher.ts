@@ -77,8 +77,7 @@ export default class Publisher {
             //currently no support for linking to nested heading with multiple #s
             headerPath = headerSplit.length > 1 ? `#${headerSplit[1]}` : '';
           }
-          const fullLinkedFilePath = getLinkpath(linkedFileName);
-          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(fullLinkedFilePath, filePath);
+          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(linkedFileName), filePath);
           if (!linkedFile) {
             result = result.replace(linkMatch, `[[${linkedFileName}${headerPath}|${prettyName}]]`);
           }
@@ -102,60 +101,50 @@ export default class Publisher {
     return linkedFile.extension;
   }
 
+  async readImageBase64(file: TFile) {
+    return arrayBufferToBase64(await this.app.vault.readBinary(file));
+  }
+
   async createBase64Images(text: string, filePath: string): Promise<string> {
-    let imageText = text;
-    const transcludedImageRegex = /!\[\[(.*?)(\.(png|jpg|jpeg|gif))\|(.*?)\]\]|!\[\[(.*?)(\.(png|jpg|jpeg|gif))\]\]/g;
-    const transcludedImageMatches = text.match(transcludedImageRegex);
-    if (transcludedImageMatches) {
-      for (let i = 0; i < transcludedImageMatches.length; i++) {
-        try {
-          const imageMatch = transcludedImageMatches[i];
-          const [imageName, size] = imageMatch
-            .substring(imageMatch.indexOf('[') + 2, imageMatch.indexOf(']'))
-            .split('|');
-          const imagePath = getLinkpath(imageName);
-          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
-          if (linkedFile) {
-            const image = await this.app.vault.readBinary(linkedFile);
-            const imageBase64 = arrayBufferToBase64(image);
-            const name = size ? `${imageName}|${size}` : imageName;
-            const imageMarkdown = `![${name}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
-            imageText = imageText.replace(imageMatch, imageMarkdown);
-          }
-        } catch {
-          continue;
+    let result = text;
+    const transcludedImageMatches =
+      text.match(/!\[\[(.*?)(\.(png|jpg|jpeg|gif))\|(.*?)\]\]|!\[\[(.*?)(\.(png|jpg|jpeg|gif))\]\]/g) ?? [];
+    for (const imageMatch of transcludedImageMatches) {
+      try {
+        const [imageName, size] = imageMatch.substring(imageMatch.indexOf('[') + 2, imageMatch.indexOf(']')).split('|');
+        const linkedFile = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(imageName), filePath);
+        if (linkedFile) {
+          const imageBase64 = await this.readImageBase64(linkedFile);
+          const name = size ? `${imageName}|${size}` : imageName;
+          const imageMarkdown = `![${name}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
+          result = result.replace(imageMatch, imageMarkdown);
         }
+      } catch {
+        continue;
       }
     }
-
-    const imageRegex = /!\[(.*?)\]\((.*?)(\.(png|jpg|jpeg|gif))\)/g;
-    const imageMatches = text.match(imageRegex);
-    if (imageMatches) {
-      for (let i = 0; i < imageMatches.length; i++) {
-        try {
-          const imageMatch = imageMatches[i];
-          const nameStart = imageMatch.indexOf('[') + 1;
-          const nameEnd = imageMatch.indexOf(']');
-          const imageName = imageMatch.substring(nameStart, nameEnd);
-          const pathStart = imageMatch.lastIndexOf('(') + 1;
-          const pathEnd = imageMatch.lastIndexOf(')');
-          const imagePath = imageMatch.substring(pathStart, pathEnd);
-          if (imagePath.startsWith('http')) {
-            continue;
-          }
-          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
-          if (linkedFile) {
-            const image = await this.app.vault.readBinary(linkedFile);
-            const imageBase64 = arrayBufferToBase64(image);
-            const imageMarkdown = `![${imageName}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
-            imageText = imageText.replace(imageMatch, imageMarkdown);
-          }
-        } catch {
+    const imageMatches = text.match(/!\[(.*?)\]\((.*?)(\.(png|jpg|jpeg|gif))\)/g) ?? [];
+    for (const imageMatch of imageMatches) {
+      try {
+        const nameStart = imageMatch.indexOf('[') + 1;
+        const nameEnd = imageMatch.indexOf(']');
+        const imageName = imageMatch.substring(nameStart, nameEnd);
+        const pathStart = imageMatch.lastIndexOf('(') + 1;
+        const pathEnd = imageMatch.lastIndexOf(')');
+        const imagePath = imageMatch.substring(pathStart, pathEnd);
+        if (imagePath.startsWith('http')) {
           continue;
         }
+        const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
+        if (linkedFile) {
+          const imageBase64 = await this.readImageBase64(linkedFile);
+          const imageMarkdown = `![${imageName}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
+          result = result.replace(imageMatch, imageMarkdown);
+        }
+      } catch {
+        continue;
       }
     }
-
-    return imageText;
+    return result;
   }
 }
