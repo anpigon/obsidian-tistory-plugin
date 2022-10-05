@@ -6,6 +6,7 @@
 ![License](https://img.shields.io/github/license/anpigon/obsidian-tistory-plugin?style=flat-square)
 ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fanpigon%2Fobsidian-tistory-plugin&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true)
 
+옵시디언 에디터에서 티스토리에 글을 등록하고 수정할 수 있습니다.
 아직 개발 중인 앱입니다. 버그나 개선사항이 있다면 [Issues](https://github.com/anpigon/obsidian-tistory-plugin/issues)에 남겨주세요.
 
 <br>
@@ -19,15 +20,13 @@
 
 ## 티스토리 플러그인 설정하기
 
-티스토리 인증 방식에서 "간편 인증"을 선택합니다. 그리고 "인증하기" 버튼을 선택합니다.
+옵시디언 설정 > 서드파티 플러그인 > Tistory에서 "인증하기" 버튼을 누릅니다.
 
-<img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193435593-dce561e1-6f69-4efe-912e-73f0cbb0f00d.png">
+<img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193976342-0bc1b81b-90f7-40e5-9178-2b215fc94341.png">
 
-> 만약 "간편 인증"에서 인증 실패가 발생한다면 "내 티스토리 앱 사용" 옵션을 사용해주세요. 그리고 내 티스토리 앱을 사용하려면 티스토리 OpenAPI의 앱ID와 비밀키가 필요합니다. 키를 발급받는 방법은 아래쪽 [티스토리 OpenAPI에서 API 키 발급하는 방법](#티스토리-openapi에서-api-키-발급하는-방법)에서 자세하게 설명합니다.
+<br>티스토리 인증에 성공하면, 글을 발행할 티스토리 블로그를 선택합니다.
 
-<br>티스토리 인증에 성공하면, 기본적으로 글을 발행할 티스토리 블로그를 선택합니다.
-
-<img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193435623-e6b68146-609a-49ab-8a54-02c1775bfa8d.png">
+<img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193976338-15217f03-0f1a-4467-8f43-3affceef7d83.png">
 
 <br>
 
@@ -57,8 +56,10 @@
 | tistoryTitle      | 글 제목                       |
 | tistoryVisibility | 발행상태 (0: 비공개, 3: 발행) |
 | tistoryCategory   | 글 카테고리 ID                |
-| tistoryPostId     | 글 Post ID                    |
+| tistoryPostId     | 글 Post ID (글 수정시 필요)   |
 | tistoryPostUrl    | 글 URL                        |
+
+<br>
 
 ### 단축키 지정하기
 
@@ -68,19 +69,8 @@
 
 <br>
 
-## 티스토리 OpenAPI에서 API 키 발급하는 방법
-
-옵시디언 티스토 플러그인을 사용하기 위해서는 [티스토리 OpenAPI](https://www.tistory.com/guide/api/manage/register) 에서 앱을 생성하고 키를 발급 받아야합니다.
-
-<img src="https://user-images.githubusercontent.com/3969643/189274934-5b7be8b7-b6b3-4408-b7b2-d5a0dee8b799.png" width="600">
-
-CallBack에는 반드시 `obsidian://tistory-oauth`를 입력해주세요.<br>
-앱 생성 후 발급받은 `App ID`와 `Secret Key`를 옵시디언 티스토리 플러그인에 입력합니다.
-
-<br>
-
 ## 후원하기
 
 커피 한 잔의 값으로 개발을 지원할 수 있습니다.
 
-<a href="https://anpigon.github.io/buymeacoffee/">카카오 페이</a>
+<a href="https://anpigon.github.io/buymeacoffee/">[KakaoPay]</a>
