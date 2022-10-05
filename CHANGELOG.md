@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.6...0.1.0) (2022-10-05)
+
+
+### Features
+
+* 이미지  to base64 ([2371c22](https://github.com/anpigon/obsidian-tistory-plugin/commit/2371c2280948b78046f07edb7979d80e0766c809))
+* 하이라이트 ([84d7cdb](https://github.com/anpigon/obsidian-tistory-plugin/commit/84d7cdb05ee1e1fc472a0881c114608e48b77f6b))
+
+
+### Bug Fixes
+
+* 인증 콜백 함수 수정 ([f5f3df1](https://github.com/anpigon/obsidian-tistory-plugin/commit/f5f3df1187ee6f921f9f5b91b22b6af26cf189b3))
+
+
+### Reverts
+
+* Revert "rename: from PublishConfirmModalView to PublishConfirmModal" ([9180d9b](https://github.com/anpigon/obsidian-tistory-plugin/commit/9180d9b906b272cdb19796016e3d441d15ad4a0d))
+
+
+### Code Refactoring
+
+* 코드 정리 ([416503e](https://github.com/anpigon/obsidian-tistory-plugin/commit/416503e40155438e1609b8592c368f8d38a0bec7))
+* createBase64Images function ([3666771](https://github.com/anpigon/obsidian-tistory-plugin/commit/36667712e6bdb3acab011e71ab5c06c8192b899c))
+* TistoryAuthModal  클래스의 updateText 함수를 public으로 ([b962cbc](https://github.com/anpigon/obsidian-tistory-plugin/commit/b962cbcd6fdc7dbd42f281762787b3f598e4f401))
+* TistorySettingTab 클래스 멤버 변수를 private로 ([dce6397](https://github.com/anpigon/obsidian-tistory-plugin/commit/dce6397e909e2775317b7a4beaca011e17a4c7ee))
+
 ### [0.0.6](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.5...0.0.6) (2022-10-02)
 
 
