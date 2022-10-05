@@ -7,8 +7,7 @@
 ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fanpigon%2Fobsidian-tistory-plugin&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true)
 
 옵시디언 에디터에서 티스토리에 글을 등록하고 수정할 수 있습니다.
-
-아직 개발 중인 앱입니다. 버그나 개선사항이 있다면 [Issues](https://github.com/anpigon/obsidian-tistory-plugin/issues)에 남겨주세요.
+<br>아직 개발 중인 앱입니다. 버그나 개선사항이 있다면 [Issues](https://github.com/anpigon/obsidian-tistory-plugin/issues)에 남겨주세요.
 
 <br>
 
@@ -47,9 +46,10 @@
 
 <img width="600" alt="" src="https://user-images.githubusercontent.com/3969643/193435956-07421a59-37d7-44df-ae8e-0e3074eb5c2a.png">
 
-자동으로 추가된 프론트매터는 글을 수정할 때 사용되는 데이터이므로 절대 삭제하면 안됩니다. 프론트매터에 추가된 데이터 속성에 대해서는 바래 아래에서 다시 설명합니다.
+자동으로 추가된 프론트매터는 글을 수정할 때 사용되는 데이터이므로 절대 삭제하면 안됩니다. 
+<br>프론트매터에 추가된 데이터 속성에 대해서는 바래 아래에서 다시 설명합니다.
 
-### 프론트메터
+### 프론트메터 속성
 
 | 속성              | 설명                          |
 | ----------------- | ----------------------------- |
