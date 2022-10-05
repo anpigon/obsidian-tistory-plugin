@@ -31,21 +31,6 @@ const md = new MarkdownIt({
     openMarker: '```plantuml',
     closeMarker: '```',
   });
-/* .use(function (md) {
-    md.renderer.rules.fence = function (tokens, idx, options, env, slf) {
-      console.log('fence', { tokens, idx, options, env, slf });
-      const token = tokens[idx];
-      if (token.info === 'dataview') {
-        const code = token.content.trim();
-        const result =  (window as any).DataviewAPI?.tryQueryMarkdown(code);
-        console.log(result);
-        if (result) {
-          return result;
-        }
-      }
-      return slf.renderToken(tokens, idx, options);
-    };
-  }); */
 
 export function markdownToHtml(markdown: string) {
   return md.render(markdown);
