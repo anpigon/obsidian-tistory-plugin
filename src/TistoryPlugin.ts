@@ -1,13 +1,12 @@
 import { MarkdownView, Notice, Plugin, stringifyYaml, TFile } from 'obsidian';
 
-import { TistoryPluginSettings } from '~/types';
-import TistoryClient from '~/tistory/TistoryClient';
+import { PublishConfirmModal, TistoryPublishOptions } from '~/ui/PublishConfirmModal';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
+import Publisher from '~/helper/publisher';
 import { TistoryAuthStorage } from '~/helper/storage';
-import { PublishConfirmModal } from '~/ui/PublishConfirmModal';
-import { UpdatePostResponse } from './tistory/types';
-import TistoryError from './tistory/TistoryError';
-import Publisher from './helper/publisher';
+import TistoryClient from '~/tistory/TistoryClient';
+import TistoryError from '~/tistory/TistoryError';
+import { TistoryPluginSettings } from '~/types';
 
 export default class TistoryPlugin extends Plugin {
   #settings: TistoryPluginSettings;
@@ -77,37 +76,70 @@ export default class TistoryPlugin extends Plugin {
     }
 
     try {
-      new PublishConfirmModal(this, activeView.file, async (postParams) => {
-        try {
-          const content = await new Publisher(this.app).generateHtml(activeView.file);
-          const response: UpdatePostResponse = await this.#tistoryClient.writeOrModifyPost({
-            ...postParams,
-            content,
-          });
-          await this.updateFile(activeView.file, {
-            tistoryBlogName: postParams.blogName,
-            tistoryTitle: postParams.title,
-            tistoryVisibility: postParams.visibility,
-            tistoryCategory: postParams.category,
-            tistoryPostId: response.postId,
-            tistoryPostUrl: response.url,
-          });
-          new Notice(`티스토리에 글이 발행되었습니다.`);
-        } catch (err) {
-          console.warn(err);
-          if (err instanceof TistoryError && err.message === '게시글 정보가 존재하지 않습니다.') {
-            new Notice(`${err.message}(postId=${postParams.postId})`);
-          } else {
-            new Notice((err as Error).toString());
-          }
-        }
+      // get frontmatter in fileContent
+      const frontmatter = {
+        ...this.app.metadataCache.getFileCache(activeView.file)?.frontmatter,
+      } as TistoryPublishOptions;
+
+      const tistoryPublishOptions: TistoryPublishOptions = {
+        tistoryBlogName: frontmatter?.tistoryBlogName || TistoryAuthStorage.getDefaultBlogId() || '',
+        tistoryVisibility: frontmatter?.tistoryVisibility ?? '0',
+        tistoryCategory: frontmatter?.tistoryCategory,
+        tistoryTitle: frontmatter?.tistoryTitle || frontmatter?.title || activeView.file.basename,
+        tistoryTag: frontmatter?.tistoryTag || frontmatter?.tag,
+        tistoryPostId: frontmatter?.tistoryPostId,
+        tistorySkipModal: frontmatter?.tistorySkipModal,
+      };
+
+      if (tistoryPublishOptions.tistorySkipModal) {
+        this.publishPost(activeView.file, tistoryPublishOptions);
+        return;
+      }
+
+      new PublishConfirmModal(this, tistoryPublishOptions, async (publishOptions) => {
+        this.publishPost(activeView.file, publishOptions);
       }).open();
     } catch (error) {
       new Notice((error as Error).toString());
     }
   }
 
-  async updateFile(file: TFile, addFrontMatter: Record<string, string | undefined>): Promise<void> {
+  async publishPost(file: TFile, options: TistoryPublishOptions) {
+    try {
+      new Notice('티스토리에 글을 업로드합니다.');
+
+      const { postId: tistoryPostId, url: tistoryPostUrl } = await this.#tistoryClient.writeOrModifyPost({
+        blogName: options.tistoryBlogName,
+        postId: options.tistoryPostId,
+        title: options.tistoryTitle,
+        visibility: options.tistoryVisibility,
+        category: options.tistoryCategory,
+        tag: options.tistoryTag,
+        content: await new Publisher(this.app).generateHtml(file),
+      });
+
+      await this.updateFile(file, {
+        tistoryBlogName: options.tistoryBlogName,
+        tistoryTitle: options.tistoryTitle,
+        tistoryVisibility: options.tistoryVisibility,
+        tistoryCategory: options.tistoryCategory,
+        tistorySkipModal: options.tistorySkipModal,
+        tistoryPostId,
+        tistoryPostUrl,
+      });
+
+      new Notice('티스토리에 글이 업로드되었습니다.');
+    } catch (err) {
+      console.warn(err);
+      if (err instanceof TistoryError && err.message === '게시글 정보가 존재하지 않습니다.') {
+        new Notice(`${err.message}(postId=${options.tistoryPostId})`);
+      } else {
+        new Notice((err as Error).toString());
+      }
+    }
+  }
+
+  async updateFile(file: TFile, addFrontMatter: Record<string, string | number | boolean | undefined>): Promise<void> {
     const cachedFrontMatter = { ...this.app.metadataCache.getFileCache(file)?.frontmatter };
     const fileContent = await app.vault.cachedRead(file);
     const contentBody = fileContent.slice(cachedFrontMatter?.position?.end.offset ?? 0);

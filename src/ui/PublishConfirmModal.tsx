@@ -1,42 +1,40 @@
-import { Modal, TFile } from 'obsidian';
 import React from 'react';
 import { createRoot, Root } from 'react-dom/client';
-import { TistoryAuthStorage } from '~/helper/storage';
+import { Modal } from 'obsidian';
+
+import PublishConfirm from '~/ui/components/PublishConfirm';
+import TistoryPlugin from '~/TistoryPlugin';
 import { UpdatePostParams } from '~/tistory/types';
 
-import TistoryPlugin from '~/TistoryPlugin';
-import PublishConfirm, { PostOptions } from '~/ui/components/PublishConfirm';
+export interface TistoryPublishOptions {
+  tistoryBlogName: UpdatePostParams['blogName'];
+  tistoryVisibility: UpdatePostParams['visibility'];
+  tistoryCategory: UpdatePostParams['category'];
+  tistoryTitle: UpdatePostParams['title'];
+  tistoryTag: UpdatePostParams['tag'];
+  tistoryPostId: UpdatePostParams['postId'];
+  tistoryAcceptComment?: UpdatePostParams['acceptComment'];
+  tistoryPublished?: UpdatePostParams['published'];
+  tistorySlogan?: UpdatePostParams['slogan'];
+  tistoryPostUrl?: string;
+  tistorySkipModal: boolean;
+  title?: string;
+  tag?: string;
+}
 
 export class PublishConfirmModal extends Modal {
   #root: Root | null;
-  #options: PostOptions;
 
   constructor(
     private readonly plugin: TistoryPlugin,
-    private readonly file: TFile,
-    private callback: (postParams: UpdatePostParams) => void,
+    private readonly options: TistoryPublishOptions,
+    private callback: (tistoryPublishOptions: TistoryPublishOptions) => void,
   ) {
     super(plugin.app);
-
-    const options = { ...this.app.metadataCache.getFileCache(this.file)?.frontmatter } as PostOptions;
-    this.#options = {
-      tistoryBlogName: options?.tistoryBlogName || TistoryAuthStorage.getDefaultBlogId() || '',
-      tistoryVisibility: options?.tistoryVisibility,
-      tistoryCategory: options?.tistoryCategory,
-      tistoryTitle: options?.tistoryTitle || options?.title || this.file.basename,
-      tistoryTag: options?.tistoryTag || options?.tag,
-      tistoryPostId: options?.tistoryPostId,
-    };
   }
 
-  handlePublish(postParams: UpdatePostParams) {
-    this.callback({
-      postId: this.#options.tistoryPostId,
-      blogName: postParams.blogName,
-      title: postParams.title,
-      visibility: postParams.visibility,
-      category: postParams.category,
-    });
+  handlePublish(tistoryPublishOptions: TistoryPublishOptions) {
+    this.callback(tistoryPublishOptions);
     this.close();
   }
 
@@ -53,10 +51,10 @@ export class PublishConfirmModal extends Modal {
     this.#root.render(
       <PublishConfirm
         plugin={this.plugin}
-        blogName={this.#options.tistoryBlogName}
-        options={this.#options}
+        blogName={this.options.tistoryBlogName}
+        options={this.options}
         onClose={() => this.close()}
-        onPublish={(postParams: UpdatePostParams) => this.handlePublish(postParams)}
+        onPublish={(result) => this.handlePublish(result)}
       />,
     );
   }

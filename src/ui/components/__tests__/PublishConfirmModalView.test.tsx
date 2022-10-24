@@ -5,9 +5,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import PublishConfirm, { PostOptions } from '~/ui/components/PublishConfirm';
+import PublishConfirm from '~/ui/components/PublishConfirm';
 import TistoryPlugin from '~/TistoryPlugin';
 import TistoryClient from '~/tistory/TistoryClient';
+import { TistoryPublishOptions } from '~/ui/PublishConfirmModal';
 
 describe('<PublishConfirmModalView />', () => {
   const onPublishMock = jest.fn();
@@ -16,8 +17,14 @@ describe('<PublishConfirmModalView />', () => {
     tistoryClient: new TistoryClient(''),
   } as any as TistoryPlugin;
   const blogName = 'anpigon';
-  const options: PostOptions = {
+  const options: TistoryPublishOptions = {
     tistoryBlogName: 'anpigon',
+    tistoryVisibility: '0',
+    tistoryCategory: undefined,
+    tistoryTitle: '',
+    tistoryTag: undefined,
+    tistoryPostId: undefined,
+    tistorySkipModal: false,
   };
 
   it('should render the confirm modalEl', () => {

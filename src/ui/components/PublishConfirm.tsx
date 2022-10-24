@@ -1,30 +1,17 @@
-import React, { ChangeEvent, PropsWithChildren, useEffect, useState, useRef } from 'react';
-import { Category, Post, UpdatePostParams } from '~/tistory/types';
-import TistoryPlugin from '~/TistoryPlugin';
-import SettingItem from './SettingItem';
-import { TistoryAuthStorage } from '~/helper/storage';
+import React, { ChangeEvent, PropsWithChildren, useEffect, useRef, useState } from 'react';
 
-export type PostOptions = {
-  tistoryBlogName: string;
-  tistoryPostId?: string;
-  tistoryTitle?: string;
-  tistoryVisibility?: '0' | '1' | '3';
-  tistoryCategory?: string;
-  tistoryTag?: string;
-  tistoryPublished?: string;
-  tistorySlogan?: string;
-  tistoryAcceptComment?: '0' | '1';
-  tistoryPostUrl?: string;
-  title?: string;
-  tag?: string;
-};
+import { Category, Post } from '~/tistory/types';
+import TistoryPlugin from '~/TistoryPlugin';
+import { TistoryAuthStorage } from '~/helper/storage';
+import SettingItem from '~/ui/components/SettingItem';
+import { TistoryPublishOptions } from '~/ui/PublishConfirmModal';
 
 type Props = PropsWithChildren<{
   plugin: TistoryPlugin;
   blogName: string;
-  options: PostOptions;
+  options: TistoryPublishOptions;
   onClose(): void;
-  onPublish(result: UpdatePostParams): void;
+  onPublish(result: TistoryPublishOptions): void;
 }>;
 
 const PublishConfirm: React.FC<Props> = (props) => {
@@ -37,6 +24,7 @@ const PublishConfirm: React.FC<Props> = (props) => {
   const [tistoryTitle, setTistoryTitle] = useState(options?.tistoryTitle ?? '');
   const [tistoryVisibility, setTistoryVisibility] = useState<Post['visibility']>(options?.tistoryVisibility ?? '3'); // 발행상태 (0: 비공개, 1: 공개(보호), 3: 공개)
   const [tistoryCategory, setTistoryCategory] = useState<string>(options?.tistoryCategory ?? '0'); // category: 카테고리 아이디 (기본값: 0)
+  const [tistorySkipModal, setTistorySkipModal] = useState<boolean>(options?.tistorySkipModal ?? true); // category: 카테고리 아이디 (기본값: 0)
 
   const handleChangeVisibility = (event: ChangeEvent<HTMLInputElement>) => {
     setTistoryVisibility(event.target.value as Post['visibility']);
@@ -50,12 +38,18 @@ const PublishConfirm: React.FC<Props> = (props) => {
     setTistoryTitle(event.target.value);
   };
 
+  const handleChangeSkipModal = (event: ChangeEvent<HTMLInputElement>) => {
+    setTistorySkipModal(event.target.checked);
+  };
+
   const handlePublish = () => {
-    const postParams: UpdatePostParams = {
-      blogName: tistoryBlogName.current,
-      title: tistoryTitle,
-      visibility: tistoryVisibility,
-      category: tistoryCategory,
+    const postParams: TistoryPublishOptions = {
+      ...options,
+      tistoryBlogName: tistoryBlogName.current,
+      tistoryTitle,
+      tistoryVisibility,
+      tistoryCategory,
+      tistorySkipModal,
     };
     onPublish(postParams);
   };
@@ -130,6 +124,16 @@ const PublishConfirm: React.FC<Props> = (props) => {
           defaultValue={options?.tistoryTitle}
           onChange={handleChangeTitle}
           style={{ width: '100%' }}
+        />
+      </SettingItem>
+      <SettingItem name="">
+        <label htmlFor="tistorySkipModalRadioBox">수정할 때 모달창을 열지 않음</label>
+        <input
+          name="skipModal"
+          type="checkbox"
+          id="tistorySkipModalRadioBox"
+          checked={tistorySkipModal}
+          onChange={handleChangeSkipModal}
         />
       </SettingItem>
       <SettingItem name="">
