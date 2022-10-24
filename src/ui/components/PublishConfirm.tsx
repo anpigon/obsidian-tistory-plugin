@@ -65,10 +65,8 @@ const PublishConfirm: React.FC<Props> = (props) => {
       // If no blog is selected, select the first blog automatically
       if (!tistoryBlogName.current) {
         const { blogs } = await tistoryClient.getBlogs();
-        tistoryBlogName.current = blogs[0].name;
-        if (tistoryBlogName.current) {
-          TistoryAuthStorage.updateTistoryAuthInfo({ defaultBlogName: tistoryBlogName.current });
-        }
+        tistoryBlogName.current = blogs?.[0].name;
+        TistoryAuthStorage.updateTistoryAuthInfo({ defaultBlogName: tistoryBlogName.current });
       }
 
       // Fetching a list of categories in a blog
