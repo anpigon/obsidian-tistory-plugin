@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.1.0...0.2.0) (2022-10-24)
+
+
+### Features
+
+* 수정시 모달창 스킵 기능 추가 ([93f3dbf](https://github.com/anpigon/obsidian-tistory-plugin/commit/93f3dbf68bcd23f9a8e3a1d9de9ccc71abe4a30b))
+
+
+### Code Refactoring
+
+* use optional chaining to get the blog name ([a2c0eb0](https://github.com/anpigon/obsidian-tistory-plugin/commit/a2c0eb0bd90cd8037b419dbba97ff269be6d022b))
+
 ## [0.1.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.0.6...0.1.0) (2022-10-05)
 
 
