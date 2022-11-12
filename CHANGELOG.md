@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.1...0.2.2) (2022-11-12)
+
+
+### Code Refactoring
+
+* 티스토리 발행 모달 팝업 코드 개선 ([9a0a4b2](https://github.com/anpigon/obsidian-tistory-plugin/commit/9a0a4b257b6962c9958dea3560be0d7b9e154ca0))
+
 ### [0.2.1](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.0...0.2.1) (2022-11-12)
 
 
