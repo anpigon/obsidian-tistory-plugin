@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.1...0.2.3) (2022-11-12)
+
+
+### Bug Fixes
+
+* 티스토리 설정 > 블로그 셀렉트 박스 ([5b52fa1](https://github.com/anpigon/obsidian-tistory-plugin/commit/5b52fa110c016b15664bf53919adef482c5a1623))
+
+
+### Code Refactoring
+
+* 티스토리 발행 모달 팝업 코드 개선 ([9a0a4b2](https://github.com/anpigon/obsidian-tistory-plugin/commit/9a0a4b257b6962c9958dea3560be0d7b9e154ca0))
+* 티스토리 설정 화면 코드 개선 ([3206246](https://github.com/anpigon/obsidian-tistory-plugin/commit/3206246f468910f598f9619574249c7d514c104a))
+
 ### [0.2.2](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.1...0.2.2) (2022-11-12)
 
 
