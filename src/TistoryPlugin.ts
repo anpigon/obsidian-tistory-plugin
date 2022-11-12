@@ -1,4 +1,4 @@
-import { MarkdownView, Notice, Plugin, stringifyYaml, TFile } from 'obsidian';
+import { App, MarkdownView, Notice, Plugin, PluginManifest, stringifyYaml, TFile } from 'obsidian';
 
 import { PublishConfirmModal, TistoryPublishOptions } from '~/ui/PublishConfirmModal';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
@@ -10,7 +10,12 @@ import { TistoryPluginSettings } from '~/types';
 
 export default class TistoryPlugin extends Plugin {
   #settings: TistoryPluginSettings;
-  #tistoryClient: TistoryClient;
+  #tistoryClient: TistoryClient | null;
+
+  constructor(app: App, manifest: PluginManifest) {
+    super(app, manifest);
+    this.#tistoryClient = null;
+  }
 
   get settings() {
     return this.#settings;
@@ -24,6 +29,11 @@ export default class TistoryPlugin extends Plugin {
     if (accessToken) {
       this.#tistoryClient = new TistoryClient(accessToken);
     }
+  }
+
+  logout() {
+    TistoryAuthStorage.clearTistoryAuthInfo();
+    this.#tistoryClient = null;
   }
 
   async onload() {
@@ -42,8 +52,9 @@ export default class TistoryPlugin extends Plugin {
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new TistorySettingTab(this));
 
-    if (TistoryAuthStorage.getAccessToken()) {
-      this.createTistoryClient(TistoryAuthStorage.getAccessToken());
+    const accessToken = TistoryAuthStorage.getAccessToken();
+    if (accessToken) {
+      this.createTistoryClient(accessToken);
     }
   }
 

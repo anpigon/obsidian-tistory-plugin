@@ -16,6 +16,7 @@ export default class TistorySettingTab extends PluginSettingTab {
   #root: Root | null;
   #authModal?: TistoryAuthModal;
   #state: string;
+  #callback?: (success: boolean) => void;
 
   constructor(private readonly plugin: TistoryPlugin) {
     super(plugin.app, plugin);
@@ -55,16 +56,19 @@ export default class TistorySettingTab extends PluginSettingTab {
     const accessToken = await requestTistoryAccessToken(code);
     TistoryAuthStorage.saveTistoryAuthInfo({ accessToken });
     this.plugin.createTistoryClient(accessToken);
+    this.#callback?.(true);
+    this.#callback = undefined;
 
     // 인증 모달 닫기
     this.handleTistoryAuthModalClose();
   }
 
   // 티스토리 인증 요청 모달 팝업 오픈
-  handleTistoryAuthModalOpen(callback: () => void) {
+  handleTistoryAuthModalOpen(callback: (success: boolean) => void) {
+    this.#callback = callback;
     const state = (this.#state = Date.now().toString(36));
     const authLink = createTistoryAuthUrl({ clientId: TISTORY_CLIENT_ID, state });
-    this.#authModal = new TistoryAuthModal(this.plugin.app, authLink, callback);
+    this.#authModal = new TistoryAuthModal(this.plugin.app, authLink);
     this.#authModal.open();
   }
 
@@ -84,7 +88,11 @@ export default class TistorySettingTab extends PluginSettingTab {
     }
 
     this.#root.render(
-      <SettingForm plugin={this.plugin} onAuth={(callback) => this.handleTistoryAuthModalOpen(callback)} />,
+      <SettingForm
+        plugin={this.plugin}
+        loggedIn={!!TistoryAuthStorage.getAccessToken()}
+        onAuth={(cb) => this.handleTistoryAuthModalOpen(cb)}
+      />,
     );
   }
 }

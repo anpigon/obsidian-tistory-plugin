@@ -1,6 +1,5 @@
 import React, { ChangeEventHandler, useEffect, useState } from 'react';
 
-import { TISTORY_LOCAL_STORAGE_KEY } from '~/constants';
 import TistoryPlugin from '~/TistoryPlugin';
 import SettingItem from './SettingItem';
 import { TistoryAuthStorage } from '~/helper/storage';
@@ -8,23 +7,24 @@ import { Blog } from '~/tistory/types';
 
 type Props = {
   plugin: TistoryPlugin;
-  onAuth(callback: () => void): void;
+  loggedIn: boolean;
+  onAuth(callback: (success: boolean) => void): void;
 };
 
-const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem(TISTORY_LOCAL_STORAGE_KEY)));
+const SettingForm: React.FC<Props> = ({ plugin, loggedIn, onAuth }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn);
   const [selectedBlog, setSelectedBlog] = useState('');
   const [blogs, setBlogs] = useState<Blog[]>();
 
   const handleLogin = () => {
     // 인증을 시도하고 인증 성공 여부을 콜백 함수로 받는다.
-    onAuth(() => {
-      setIsLoggedIn(Boolean(TistoryAuthStorage.loadTistoryAuthInfo()?.accessToken));
+    onAuth((success) => {
+      setIsLoggedIn(success);
     });
   };
 
   const handleLogout = () => {
-    TistoryAuthStorage.clearTistoryAuthInfo();
+    plugin.logout();
     setIsLoggedIn(false);
   };
 
@@ -32,11 +32,13 @@ const SettingForm: React.FC<Props> = ({ plugin, onAuth }) => {
     const accessInfo = TistoryAuthStorage.loadTistoryAuthInfo();
     if (accessInfo?.accessToken) {
       plugin.createTistoryClient(accessInfo.accessToken);
-      const { blogs } = await plugin.tistoryClient.getBlogs();
-      setBlogs(blogs);
-      setSelectedBlog(accessInfo?.defaultBlogName || blogs[0].name);
-      if (!accessInfo.defaultBlogName) {
-        TistoryAuthStorage.updateTistoryAuthInfo({ defaultBlogName: blogs[0].name });
+      if (plugin.tistoryClient) {
+        const { blogs } = await plugin.tistoryClient.getBlogs();
+        setBlogs(blogs);
+        setSelectedBlog(accessInfo?.defaultBlogName || blogs[0].name);
+        if (!accessInfo.defaultBlogName) {
+          TistoryAuthStorage.updateTistoryAuthInfo({ defaultBlogName: blogs[0].name });
+        }
       }
     }
   };
