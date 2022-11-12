@@ -56,6 +56,8 @@ const PublishConfirm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     (async function loadCategories() {
+      if (!tistoryClient) return;
+
       // If no blog is selected, select the first blog automatically
       if (!tistoryBlogName.current) {
         const { blogs } = await tistoryClient.getBlogs();

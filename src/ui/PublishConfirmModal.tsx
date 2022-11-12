@@ -5,6 +5,7 @@ import { Modal } from 'obsidian';
 import PublishConfirm from '~/ui/components/PublishConfirm';
 import TistoryPlugin from '~/TistoryPlugin';
 import { UpdatePostParams } from '~/tistory/types';
+import ReactDOM from 'react-dom';
 
 export interface TistoryPublishOptions {
   tistoryBlogName: UpdatePostParams['blogName'];
@@ -23,8 +24,6 @@ export interface TistoryPublishOptions {
 }
 
 export class PublishConfirmModal extends Modal {
-  #root: Root | null;
-
   constructor(
     private readonly plugin: TistoryPlugin,
     private readonly options: TistoryPublishOptions,
@@ -40,15 +39,8 @@ export class PublishConfirmModal extends Modal {
 
   async onOpen() {
     const { contentEl, titleEl } = this;
-    contentEl.empty();
-
     titleEl.createEl('h2', { text: '티스토리 글 발행' });
-
-    if (!this.#root) {
-      this.#root = createRoot(contentEl);
-    }
-
-    this.#root.render(
+    createRoot(contentEl).render(
       <PublishConfirm
         plugin={this.plugin}
         blogName={this.options.tistoryBlogName}
@@ -61,8 +53,7 @@ export class PublishConfirmModal extends Modal {
 
   onClose() {
     const { contentEl } = this;
-    this.#root?.unmount();
-    this.#root = null;
+    ReactDOM.unmountComponentAtNode(contentEl);
     contentEl.empty();
   }
 }

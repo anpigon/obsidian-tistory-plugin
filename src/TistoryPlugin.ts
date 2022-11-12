@@ -116,6 +116,11 @@ export default class TistoryPlugin extends Plugin {
   }
 
   async publishPost(file: TFile, options: TistoryPublishOptions) {
+    if (!this.#tistoryClient) {
+      new Notice('티스토리 설정에서 [인증하기] 버튼을 눌러주세요.');
+      return;
+    }
+
     try {
       new Notice('티스토리에 글을 업로드합니다.');
 
