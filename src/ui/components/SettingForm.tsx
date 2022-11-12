@@ -78,6 +78,8 @@ const SettingForm: React.FC<Props> = ({ plugin, loggedIn, onAuth }) => {
               aria-label="티스토리 블로그 선택"
               onChange={handleChangeBlog}
               value={selectedBlog}
+              placeholder="기본 블로그를 선택하세요."
+              disabled={!blogs?.length}
             >
               <option disabled>기본 블로그를 선택하세요.</option>
               {blogs?.map((blog) => {
