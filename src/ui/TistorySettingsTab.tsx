@@ -9,11 +9,11 @@ import SettingForm from './components/SettingForm';
 import { TistoryPluginSettings } from '~/types';
 import { TistoryAuthStorage } from '~/helper/storage';
 import { createTistoryAuthUrl, requestTistoryAccessToken } from '~/tistory/TistoryAuth';
+import ReactDOM from 'react-dom';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {};
 
 export default class TistorySettingTab extends PluginSettingTab {
-  #root: Root | null;
   #authModal?: TistoryAuthModal;
   #state: string;
   #callback?: (success: boolean) => void;
@@ -80,19 +80,17 @@ export default class TistorySettingTab extends PluginSettingTab {
   }
 
   display(): void {
-    const { containerEl } = this;
-
-    if (!this.#root) {
-      containerEl.empty();
-      this.#root = createRoot(containerEl);
-    }
-
-    this.#root.render(
+    createRoot(this.containerEl).render(
       <SettingForm
         plugin={this.plugin}
         loggedIn={!!TistoryAuthStorage.getAccessToken()}
         onAuth={(cb) => this.handleTistoryAuthModalOpen(cb)}
       />,
     );
+  }
+
+  hide(): void {
+    ReactDOM.unmountComponentAtNode(this.containerEl);
+    super.hide();
   }
 }
