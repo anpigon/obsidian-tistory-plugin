@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.3...0.2.4) (2022-11-13)
+
+
+### Bug Fixes
+
+* 블로그에 카테고리 정보가 없는 경우 발행시 에러 발생 ([b8fa7bb](https://github.com/anpigon/obsidian-tistory-plugin/commit/b8fa7bb5ae5f0a220ab1e1e624e48b1b0d0fbb5f))
+
 ### [0.2.3](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.1...0.2.3) (2022-11-12)
 
 
