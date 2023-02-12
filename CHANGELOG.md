@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.0...0.3.0) (2023-02-12)
+
+
+### Features
+
+* 태그 입력 기능 추가 ([b774611](https://github.com/anpigon/obsidian-tistory-plugin/commit/b7746111c774e51a38da7b9d70dad2f9b236c574))
+
+
+### Bug Fixes
+
+* 로그아웃 안되는 이슈 ([d2a0eee](https://github.com/anpigon/obsidian-tistory-plugin/commit/d2a0eee659399b562181b6082e3d47393753dc54))
+* 블로그에 카테고리 정보가 없는 경우 발행시 에러 발생 [#1](https://github.com/anpigon/obsidian-tistory-plugin/issues/1) ([9b433c4](https://github.com/anpigon/obsidian-tistory-plugin/commit/9b433c4c28e3b346b64b54eb4e8f27b9d73aa337))
+* 티스토리 설정 > 블로그 셀렉트 박스 ([5b52fa1](https://github.com/anpigon/obsidian-tistory-plugin/commit/5b52fa110c016b15664bf53919adef482c5a1623))
+
+
+### Code Refactoring
+
+* 티스토리 발행 모달 팝업 코드 개선 ([9a0a4b2](https://github.com/anpigon/obsidian-tistory-plugin/commit/9a0a4b257b6962c9958dea3560be0d7b9e154ca0))
+* 티스토리 설정 화면 코드 개선 ([3206246](https://github.com/anpigon/obsidian-tistory-plugin/commit/3206246f468910f598f9619574249c7d514c104a))
+
 ### [0.2.4](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.3...0.2.4) (2022-11-13)
 
 
