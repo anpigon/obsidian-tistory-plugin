@@ -14,3 +14,17 @@ If your plugin does not need CSS, delete this file.
 .tistory .setting-item-name small {
   color: var(--text-faint);
 }
+
+.tistory [type="datetime-local"]{
+  height: var(--input-height);
+  -webkit-app-region: no-drag;
+  background: var(--background-modifier-form-field);
+  border: var(--input-border-width) solid var(--background-modifier-border);
+  transition: box-shadow 0.15s ease-in-out, border 0.15s ease-in-out;
+  color: var(--text-normal);
+  font-family: inherit;
+  padding: var(--size-4-1) var(--size-4-2);
+  font-size: var(--font-ui-small);
+  border-radius: var(--input-radius);
+  outline: none;
+}

@@ -113,6 +113,7 @@ export default class TistoryPlugin extends Plugin {
         tistoryTags: frontmatter?.tistoryTags || tags,
         tistoryPostId: frontmatter?.tistoryPostId,
         tistorySkipModal: frontmatter?.tistorySkipModal,
+        tistoryPublished: frontmatter?.tistoryPublished,
       };
 
       if (tistoryPublishOptions.tistorySkipModal) {
@@ -145,6 +146,9 @@ export default class TistoryPlugin extends Plugin {
         category: options.tistoryCategory,
         tag: options.tistoryTags,
         content: await new Publisher(this.app).generateHtml(file),
+        ...(options.tistoryPublished && {
+          published: `${Math.floor(new Date(options.tistoryPublished).getTime() / 1000)}`,
+        }),
       });
 
       await this.updateFile(file, {
@@ -154,6 +158,7 @@ export default class TistoryPlugin extends Plugin {
         tistoryVisibility: options.tistoryVisibility,
         tistoryCategory: options.tistoryCategory,
         tistorySkipModal: options.tistorySkipModal,
+        tistoryPublished: options.tistoryPublished,
         tistoryPostId,
         tistoryPostUrl,
       });

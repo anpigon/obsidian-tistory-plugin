@@ -5,6 +5,7 @@ import TistoryPlugin from '~/TistoryPlugin';
 import { TistoryAuthStorage } from '~/helper/storage';
 import SettingItem from '~/ui/components/SettingItem';
 import { TistoryPublishOptions } from '~/ui/PublishConfirmModal';
+import { dateFormat } from '~/helper/dateFormat';
 
 type Props = PropsWithChildren<{
   plugin: TistoryPlugin;
@@ -24,8 +25,18 @@ const PublishConfirm: React.FC<Props> = (props) => {
   const [tistoryTitle, setTistoryTitle] = useState(options?.tistoryTitle ?? '');
   const [tistoryTags, setTistoryTags] = useState(options?.tistoryTags ?? '');
   const [tistoryVisibility, setTistoryVisibility] = useState<Post['visibility']>(options?.tistoryVisibility ?? '3'); // 발행상태 (0: 비공개, 1: 공개(보호), 3: 공개)
+  const [tistoryPublished, setTistoryPublished] = useState<string>(options?.tistoryPublished ?? ''); // 발행시간
+  const [tistoryScheduled, setTistoryScheduled] = useState<string>(options?.tistoryPublished ? '1' : '0'); // 0: 현재발행, 1: 예약발행
   const [tistoryCategory, setTistoryCategory] = useState<string>(options?.tistoryCategory ?? '0'); // category: 카테고리 아이디 (기본값: 0)
   const [tistorySkipModal, setTistorySkipModal] = useState<boolean>(options?.tistorySkipModal ?? true); // category: 카테고리 아이디 (기본값: 0)
+
+  useEffect(() => {
+    console.log('tistoryVisibility' , tistoryVisibility)
+    if(tistoryVisibility === '0') {
+      setTistoryScheduled('0')
+      setTistoryPublished('')
+    }
+  }, [tistoryVisibility])
 
   const handleChangeVisibility = (event: ChangeEvent<HTMLInputElement>) => {
     setTistoryVisibility(event.target.value as Post['visibility']);
@@ -56,6 +67,7 @@ const PublishConfirm: React.FC<Props> = (props) => {
       tistoryVisibility,
       tistoryCategory,
       tistorySkipModal,
+      tistoryPublished,
     };
     onPublish(postParams);
   };
@@ -134,11 +146,54 @@ const PublishConfirm: React.FC<Props> = (props) => {
           style={{ width: '100%' }}
         />
       </SettingItem>
-      <SettingItem name={<span>태그<small> 콤마(,)로 구분</small></span>}>
+      <SettingItem
+        name={
+          <span>
+            태그<small> 콤마(,)로 구분</small>
+          </span>
+        }
+      >
         <input type="text" defaultValue={options?.tistoryTags} onChange={handleChangeTag} style={{ width: '100%' }} />
       </SettingItem>
+      <SettingItem name="발행일">
+        <label>
+          <input
+            type="radio"
+            name="scheduled"
+            value="0"
+            checked={tistoryScheduled === '0'}
+            onChange={(e) => {
+              setTistoryPublished('');
+              setTistoryScheduled(e.target.value);
+            }}
+          />{' '}
+          현재
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="scheduled"
+            disabled={tistoryVisibility === '0'}
+            value="1"
+            checked={tistoryScheduled === '1'}
+            onChange={(e) => {
+              setTistoryScheduled(e.target.value);
+            }}
+          />{' '}
+          예약
+        </label>{' '}
+        <input
+          type="datetime-local"
+          min={dateFormat(new Date())}
+          disabled={tistoryScheduled === '0'}
+          value={tistoryPublished}
+          onChange={(e) => {
+            setTistoryPublished(e.target.value);
+          }}
+        />
+      </SettingItem>
       <SettingItem name="">
-        <label htmlFor="tistorySkipModalRadioBox">수정할 때 모달창을 열지 않음</label>
+        <label htmlFor="tistorySkipModalRadioBox">다음부터 수정할 때 모달창을 열지 않음</label>
         <input
           name="skipModal"
           type="checkbox"
