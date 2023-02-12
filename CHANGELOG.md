@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.3.0...0.3.1) (2023-02-12)
+
+
+### Bug Fixes
+
+* build error ([5f7e6ef](https://github.com/anpigon/obsidian-tistory-plugin/commit/5f7e6ef5c65154558705258b473584567107543f))
+
 ## [0.3.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.2.0...0.3.0) (2023-02-12)
 
 
