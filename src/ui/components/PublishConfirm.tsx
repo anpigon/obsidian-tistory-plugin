@@ -22,6 +22,7 @@ const PublishConfirm: React.FC<Props> = (props) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   const [tistoryTitle, setTistoryTitle] = useState(options?.tistoryTitle ?? '');
+  const [tistoryTags, setTistoryTags] = useState(options?.tistoryTags ?? '');
   const [tistoryVisibility, setTistoryVisibility] = useState<Post['visibility']>(options?.tistoryVisibility ?? '3'); // 발행상태 (0: 비공개, 1: 공개(보호), 3: 공개)
   const [tistoryCategory, setTistoryCategory] = useState<string>(options?.tistoryCategory ?? '0'); // category: 카테고리 아이디 (기본값: 0)
   const [tistorySkipModal, setTistorySkipModal] = useState<boolean>(options?.tistorySkipModal ?? true); // category: 카테고리 아이디 (기본값: 0)
@@ -38,6 +39,10 @@ const PublishConfirm: React.FC<Props> = (props) => {
     setTistoryTitle(event.target.value);
   };
 
+  const handleChangeTag = (event: ChangeEvent<HTMLInputElement>) => {
+    setTistoryTags(event.target.value);
+  };
+
   const handleChangeSkipModal = (event: ChangeEvent<HTMLInputElement>) => {
     setTistorySkipModal(event.target.checked);
   };
@@ -47,6 +52,7 @@ const PublishConfirm: React.FC<Props> = (props) => {
       ...options,
       tistoryBlogName: tistoryBlogName.current,
       tistoryTitle,
+      tistoryTags: tistoryTags,
       tistoryVisibility,
       tistoryCategory,
       tistorySkipModal,
@@ -127,6 +133,9 @@ const PublishConfirm: React.FC<Props> = (props) => {
           onChange={handleChangeTitle}
           style={{ width: '100%' }}
         />
+      </SettingItem>
+      <SettingItem name={<span>태그<small> 콤마(,)로 구분</small></span>}>
+        <input type="text" defaultValue={options?.tistoryTags} onChange={handleChangeTag} style={{ width: '100%' }} />
       </SettingItem>
       <SettingItem name="">
         <label htmlFor="tistorySkipModalRadioBox">수정할 때 모달창을 열지 않음</label>

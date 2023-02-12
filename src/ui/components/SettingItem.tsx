@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, ReactNode } from 'react';
 
 type Props = PropsWithChildren<{
-  name: string;
+  name: string | ReactNode;
   description?: ReactNode;
   errorMessage?: ReactNode;
 }>;

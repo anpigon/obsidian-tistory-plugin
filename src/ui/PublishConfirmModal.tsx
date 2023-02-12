@@ -12,7 +12,7 @@ export interface TistoryPublishOptions {
   tistoryVisibility: UpdatePostParams['visibility'];
   tistoryCategory: UpdatePostParams['category'];
   tistoryTitle: UpdatePostParams['title'];
-  tistoryTag: UpdatePostParams['tag'];
+  tistoryTags: UpdatePostParams['tag'];
   tistoryPostId: UpdatePostParams['postId'];
   tistoryAcceptComment?: UpdatePostParams['acceptComment'];
   tistoryPublished?: UpdatePostParams['published'];
@@ -40,6 +40,7 @@ export class PublishConfirmModal extends Modal {
   async onOpen() {
     const { contentEl, titleEl } = this;
     titleEl.createEl('h2', { text: '티스토리 글 발행' });
+    contentEl.classList.add('tistory')
     createRoot(contentEl).render(
       <PublishConfirm
         plugin={this.plugin}

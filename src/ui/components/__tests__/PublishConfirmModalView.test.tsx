@@ -22,7 +22,7 @@ describe('<PublishConfirmModalView />', () => {
     tistoryVisibility: '0',
     tistoryCategory: undefined,
     tistoryTitle: '',
-    tistoryTag: undefined,
+    tistoryTags: undefined,
     tistoryPostId: undefined,
     tistorySkipModal: false,
   };

@@ -10,3 +10,7 @@ If your plugin does not need CSS, delete this file.
 .modal.mod-settings .tistory .setting-item-control button:disabled {
   color: var(--text-faint);
 }
+
+.tistory .setting-item-name small {
+  color: var(--text-faint);
+}

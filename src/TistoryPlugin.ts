@@ -1,4 +1,13 @@
-import { App, MarkdownView, Notice, Plugin, PluginManifest, stringifyYaml, TFile } from 'obsidian';
+import {
+  App,
+  MarkdownView,
+  Notice,
+  Plugin,
+  PluginManifest,
+  stringifyYaml,
+  TFile,
+  parseFrontMatterTags,
+} from 'obsidian';
 
 import { PublishConfirmModal, TistoryPublishOptions } from '~/ui/PublishConfirmModal';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
@@ -9,20 +18,21 @@ import TistoryError from '~/tistory/TistoryError';
 import { TistoryPluginSettings } from '~/types';
 
 export default class TistoryPlugin extends Plugin {
-  #settings: TistoryPluginSettings;
+  #settings: TistoryPluginSettings | null;
   #tistoryClient: TistoryClient | null;
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest);
+    this.#settings = null;
     this.#tistoryClient = null;
   }
 
   get settings() {
-    return this.#settings;
+    return this.#settings!;
   }
 
   get tistoryClient() {
-    return this.#tistoryClient;
+    return this.#tistoryClient!;
   }
 
   createTistoryClient(accessToken: string | null | undefined) {
@@ -91,13 +101,16 @@ export default class TistoryPlugin extends Plugin {
       const frontmatter = {
         ...this.app.metadataCache.getFileCache(activeView.file)?.frontmatter,
       } as TistoryPublishOptions;
+      const tags = parseFrontMatterTags(frontmatter)
+        ?.map((tag) => tag.replace(/^#/, ''))
+        ?.join(',');
 
       const tistoryPublishOptions: TistoryPublishOptions = {
         tistoryBlogName: frontmatter?.tistoryBlogName || TistoryAuthStorage.getDefaultBlogId() || '',
         tistoryVisibility: frontmatter?.tistoryVisibility ?? '0',
         tistoryCategory: frontmatter?.tistoryCategory,
         tistoryTitle: frontmatter?.tistoryTitle || frontmatter?.title || activeView.file.basename,
-        tistoryTag: frontmatter?.tistoryTag || frontmatter?.tag,
+        tistoryTags: frontmatter?.tistoryTags || tags,
         tistoryPostId: frontmatter?.tistoryPostId,
         tistorySkipModal: frontmatter?.tistorySkipModal,
       };
@@ -130,13 +143,14 @@ export default class TistoryPlugin extends Plugin {
         title: options.tistoryTitle,
         visibility: options.tistoryVisibility,
         category: options.tistoryCategory,
-        tag: options.tistoryTag,
+        tag: options.tistoryTags,
         content: await new Publisher(this.app).generateHtml(file),
       });
 
       await this.updateFile(file, {
         tistoryBlogName: options.tistoryBlogName,
         tistoryTitle: options.tistoryTitle,
+        tistoryTags: options.tistoryTags,
         tistoryVisibility: options.tistoryVisibility,
         tistoryCategory: options.tistoryCategory,
         tistorySkipModal: options.tistorySkipModal,
@@ -164,7 +178,7 @@ export default class TistoryPlugin extends Plugin {
       ...cachedFrontMatter,
       ...addFrontMatter,
     };
-    const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---${contentBody}`;
+    const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---\n${contentBody}`;
     return await this.app.vault.modify(file, newFileContent);
   }
 }
