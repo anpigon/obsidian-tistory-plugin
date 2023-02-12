@@ -1,7 +1,7 @@
 {
 	"id": "tistory",
 	"name": "Tistory",
-	"version": "0.3.1",
+	"version": "0.4.0",
 	"minAppVersion": "0.15.0",
 	"description": "A plugin for publishing Obsidian documents to Tistory.",
 	"author": "anpigon",

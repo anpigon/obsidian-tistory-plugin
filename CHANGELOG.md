@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.3.1...0.4.0) (2023-02-12)
+
+
+### Features
+
+* 예약 기능 추가 ([c90d00d](https://github.com/anpigon/obsidian-tistory-plugin/commit/c90d00d75826a019fa24ac6e59c9a8a4cd74b489))
+
 ### [0.3.1](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.3.0...0.3.1) (2023-02-12)
 
 
