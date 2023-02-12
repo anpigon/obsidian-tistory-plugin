@@ -2,6 +2,7 @@
 /**
  * @jest-environment jsdom
  */
+// @ts-nocheck
 import { Editor } from 'codemirror';
 import * as obsidian from 'obsidian';
 

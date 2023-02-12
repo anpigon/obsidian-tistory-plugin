@@ -6,11 +6,11 @@ export default class TistoryAuthModal extends Modal {
   private secondsLeft = OPEN_BROWSER_IN_SECONDS;
   private opened = false;
 
-  private timerDiv: HTMLDivElement;
-  private noWaitDiv: HTMLDivElement;
+  private timerDiv: HTMLDivElement | null = null
+  private noWaitDiv: HTMLDivElement | null = null;
 
   private intervalId: NodeJS.Timeout | null = null;
-  isSuccess: boolean;
+  isSuccess: boolean = false;
 
   constructor(app: App, private readonly authLink: string, private readonly afterClose?: () => void) {
     super(app);
@@ -75,10 +75,10 @@ export default class TistoryAuthModal extends Modal {
 
   public updateText(text?: string) {
     if (text) {
-      this.timerDiv.setText(text);
-      this.noWaitDiv.remove();
+      this.timerDiv?.setText(text);
+      this.noWaitDiv?.remove();
     } else {
-      this.timerDiv.setText(`티스토리에서 인증을 완료해주세요. ${this.secondsLeft}초 후에 브라우저 열기...`);
+      this.timerDiv?.setText(`티스토리에서 인증을 완료해주세요. ${this.secondsLeft}초 후에 브라우저 열기...`);
     }
   }
 }
