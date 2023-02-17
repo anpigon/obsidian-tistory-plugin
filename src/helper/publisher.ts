@@ -82,8 +82,15 @@ export default class Publisher {
             result = result.replace(linkMatch, `[[${linkedFileName}${headerPath}|${prettyName}]]`);
           }
           if (linkedFile?.extension === 'md') {
-            const extensionlessPath = linkedFile.path.substring(0, linkedFile.path.lastIndexOf('.'));
-            result = result.replace(linkMatch, `[[${extensionlessPath}${headerPath}|${prettyName}]]`);
+            const frontmatter = this.app.metadataCache.getFileCache(linkedFile)?.frontmatter;
+            if (frontmatter && 'tistoryPostUrl' in frontmatter) {
+              const { tistoryPostUrl, tistoryTitle } = frontmatter;
+              result = result.replace(linkMatch, `<a href="${tistoryPostUrl}">${tistoryTitle || prettyName}</a>`);
+            } else {
+              result = result.replace(linkMatch, `[[${prettyName}]]`);
+            }
+            // const extensionlessPath = linkedFile.path.substring(0, linkedFile.path.lastIndexOf('.'));
+            // result = result.replace(linkMatch, `[[${extensionlessPath}${headerPath}|${prettyName}]]`);
           }
         } catch (e) {
           console.log(e);
