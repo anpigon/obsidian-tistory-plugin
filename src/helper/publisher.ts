@@ -131,6 +131,7 @@ export default class Publisher {
       }
     }
     const imageMatches = text.match(/!\[(.*?)\]\((.*?)(\.(png|jpg|jpeg|gif))\)/g) ?? [];
+
     for (const imageMatch of imageMatches) {
       try {
         const nameStart = imageMatch.indexOf('[') + 1;
@@ -140,13 +141,16 @@ export default class Publisher {
         const pathEnd = imageMatch.lastIndexOf(')');
         const imagePath = imageMatch.substring(pathStart, pathEnd);
         if (imagePath.startsWith('http')) {
-          continue;
-        }
-        const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
-        if (linkedFile) {
-          const imageBase64 = await this.readImageBase64(linkedFile);
-          const imageMarkdown = `![${imageName}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
-          result = result.replace(imageMatch, imageMarkdown);
+          // const [alt, size] = imageName.split('|');
+          // const width = size ? `width="${size}"` : '';
+          // result = result.replace(imageMatch, `<img src="${imagePath}" alt="${alt}" ${width}>`);
+        } else {
+          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
+          if (linkedFile) {
+            const imageBase64 = await this.readImageBase64(linkedFile);
+            const imageMarkdown = `![${imageName}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
+            result = result.replace(imageMatch, imageMarkdown);
+          }
         }
       } catch {
         continue;
