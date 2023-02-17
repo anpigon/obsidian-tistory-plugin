@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.4.0...0.5.0) (2023-02-17)
+
+
+### Features
+
+* 티스토리 링크면 a tag로 변환 ([0931d0a](https://github.com/anpigon/obsidian-tistory-plugin/commit/0931d0a5fc4a21f1c20d458c23a951cef038970c))
+
+
+### Bug Fixes
+
+* 글 발행시마다 노트 내용이 한줄씩 내려가는 이슈 ([6275c75](https://github.com/anpigon/obsidian-tistory-plugin/commit/6275c75afb6dc31095e5785ebe6b76837474a940))
+* image parser ([00cd81e](https://github.com/anpigon/obsidian-tistory-plugin/commit/00cd81e53d78e337735794e3f0b3cabc515a1779))
+
 ## [0.4.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.3.1...0.4.0) (2023-02-12)
 
 
