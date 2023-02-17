@@ -2,20 +2,20 @@ import {
   App,
   MarkdownView,
   Notice,
+  parseFrontMatterTags,
   Plugin,
   PluginManifest,
   stringifyYaml,
   TFile,
-  parseFrontMatterTags,
 } from 'obsidian';
 
-import { PublishConfirmModal, TistoryPublishOptions } from '~/ui/PublishConfirmModal';
-import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
 import Publisher from '~/helper/publisher';
 import { TistoryAuthStorage } from '~/helper/storage';
 import TistoryClient from '~/tistory/TistoryClient';
 import TistoryError from '~/tistory/TistoryError';
 import { TistoryPluginSettings } from '~/types';
+import { PublishConfirmModal, TistoryPublishOptions } from '~/ui/PublishConfirmModal';
+import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
 
 export default class TistoryPlugin extends Plugin {
   #settings: TistoryPluginSettings | null;
@@ -175,10 +175,15 @@ export default class TistoryPlugin extends Plugin {
   }
 
   async updateFile(file: TFile, addFrontMatter: Record<string, string | number | boolean | undefined>): Promise<void> {
-    const cachedFrontMatter = { ...this.app.metadataCache.getFileCache(file)?.frontmatter };
     const fileContent = await app.vault.cachedRead(file);
-    const contentBody = fileContent.slice(cachedFrontMatter?.position?.end.offset ?? 0);
-    delete cachedFrontMatter.position;
+    const cachedFrontMatter = { ...this.app.metadataCache.getFileCache(file)?.frontmatter };
+    const hasCachedFrontMatter = 'position' in cachedFrontMatter;
+
+    const contentBody = hasCachedFrontMatter
+      ? fileContent.slice((cachedFrontMatter.position?.end.offset ?? 0) + 1)
+      : fileContent;
+    delete cachedFrontMatter['position'];
+
     const newFrontMatter = {
       ...cachedFrontMatter,
       ...addFrontMatter,
