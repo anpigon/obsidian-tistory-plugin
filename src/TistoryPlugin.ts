@@ -118,7 +118,7 @@ export default class TistoryPlugin extends Plugin {
 
       const blogFooter = this.settings.blogFooter ? `\n${this.settings.blogFooter}` : '';
       const html = await new Publisher(this.app).generateHtml(markdown + blogFooter, activeView.file);
-      
+
       // 모달창 오픈하지 않기 옵션이 활성화되어 있는 경우
       if (tistoryPublishOptions.tistorySkipModal) {
         this.publishPost(html, activeView.file, tistoryPublishOptions);
