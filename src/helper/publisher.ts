@@ -14,11 +14,12 @@ export default class Publisher {
     const frontMatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
     const fileContent = await app.vault.cachedRead(file);
     let result = fileContent.slice(frontMatter?.position?.end.offset ?? 0);
-    result = await this.removeObsidianComments(result);
+    result = this.removeObsidianComments(result);
     result = await this.renderDataViews(result);
     result = await this.renderLinksToFullPath(result, file.path);
     result = await this.createBase64Images(result, file.path);
     result = markdownToHtml(result);
+    console.log(result)
     return result;
   }
 
