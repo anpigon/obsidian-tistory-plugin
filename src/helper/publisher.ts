@@ -19,7 +19,6 @@ export default class Publisher {
     result = await this.renderLinksToFullPath(result, file.path);
     result = await this.createBase64Images(result, file.path);
     result = markdownToHtml(result);
-    console.log(result)
     return result;
   }
 
