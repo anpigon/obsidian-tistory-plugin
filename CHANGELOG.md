@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.2](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.6.1...0.6.2) (2023-02-18)
+
+
+### Bug Fixes
+
+* 코드 블럭에 html 태그가 포함된 경우 오류 ([1a5e007](https://github.com/anpigon/obsidian-tistory-plugin/commit/1a5e007ecec08a48d08bec7afb6cba1cdb3ec0ac))
+
 ### [0.6.1](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.6.0...0.6.1) (2023-02-18)
 
 
