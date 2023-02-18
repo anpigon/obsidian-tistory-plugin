@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.6.2...0.7.0) (2023-02-18)
+
+
+### Features
+
+* 블로그 푸터 기능 추가 ([6198ab3](https://github.com/anpigon/obsidian-tistory-plugin/commit/6198ab369bf0c0eaae2c8df869f002f0123397ef))
+* 설정에 푸터 입력 기능 ([c1f36d4](https://github.com/anpigon/obsidian-tistory-plugin/commit/c1f36d4dd0a646b7ab2a5e33db53ea2846f169e7))
+
 ### [0.6.2](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.6.1...0.6.2) (2023-02-18)
 
 
