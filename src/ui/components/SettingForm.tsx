@@ -91,6 +91,15 @@ const SettingForm: React.FC<Props> = ({ plugin, loggedIn, onAuth }) => {
               })}
             </select>
           </SettingItem>
+
+          <SettingItem name="푸터" description="모든 글 하단에 나타납니다.">
+            <textarea name="contentFooter" rows={8} cols={50} spellCheck={false} 
+            defaultValue={plugin.settings.contentFooter || ''}
+            onChange={(event) => {
+              plugin.settings.contentFooter = event.target.value;
+              plugin.saveSettings()
+            }} />
+          </SettingItem>
         </>
       )}
     </div>

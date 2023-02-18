@@ -1,15 +1,14 @@
-import React from 'react';
 import { Notice, PluginSettingTab } from 'obsidian';
-import { createRoot, Root } from 'react-dom/client';
-
-import TistoryPlugin from '~/TistoryPlugin';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { TISTORY_CLIENT_ID } from '~/constants';
-import TistoryAuthModal from './components/TistoryAuthModal';
-import SettingForm from './components/SettingForm';
-import { TistoryPluginSettings } from '~/types';
 import { TistoryAuthStorage } from '~/helper/storage';
 import { createTistoryAuthUrl, requestTistoryAccessToken } from '~/tistory/TistoryAuth';
-import ReactDOM from 'react-dom';
+import TistoryPlugin from '~/TistoryPlugin';
+import type { TistoryPluginSettings } from '~/types';
+import SettingForm from './components/SettingForm';
+import TistoryAuthModal from './components/TistoryAuthModal';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {};
 
