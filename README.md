@@ -106,11 +106,9 @@
 
 ## 🤝 추가 내용
 
-현재 티스토리 플러그인은 노트에 포함된 내부 이미지를 Base64 encoded data 형태로 블로그 내용에 포함하여 업로드하고 있습니다. 
-
-이슈 https://github.com/anpigon/obsidian-tistory-plugin/issues/2 에서 알려진 바와 같이 용량이 큰 이미지가 포함된 글을 발행하면 "글자수 초과 에러"가 발생합니다.
-
-이 문제는 해결할 계획입니다. 당분간 이미지 업로드에 [옵시디언 Imgur 플러그인](https://obsidian.md/plugins?id=obsidian-imgur-plugin)을 사용을 권장합니다.
+- 현재 티스토리 플러그인은 노트에 포함된 내부 이미지를 `Base64 encoded data` 형태로 블로그 내용에 포함하여 업로드하고 있습니다. 
+- 이슈 https://github.com/anpigon/obsidian-tistory-plugin/issues/2 에서 알려진 바와 같이 용량이 큰 이미지가 포함된 글을 발행하면 "글자수 초과 에러"가 발생합니다.
+- 이 문제는 해결할 계획입니다. 당분간 이미지 업로드에 [옵시디언 Imgur 플러그인](https://obsidian.md/plugins?id=obsidian-imgur-plugin)을 사용을 권장합니다.
 
 <br>
 
