@@ -99,9 +99,8 @@ export default class TistoryPlugin extends Plugin {
 
     try {
       // get frontmatter in fileContent
-      const frontmatter = {
-        ...this.app.metadataCache.getFileCache(activeView.file)?.frontmatter,
-      } as TistoryPublishOptions;
+      const frontmatter = this.app.metadataCache.getFileCache(activeView.file)?.frontmatter;
+      const markdown = fileContent.slice(frontmatter?.position?.end.offset ?? 0).trim();
       const tags = parseFrontMatterTags(frontmatter)
         ?.map((tag) => tag.replace(/^#/, ''))
         ?.join(',');
@@ -117,36 +116,39 @@ export default class TistoryPlugin extends Plugin {
         tistoryPublished: frontmatter?.tistoryPublished,
       };
 
+      const blogFooter = this.settings.blogFooter ? `\n${this.settings.blogFooter}` : '';
+      const html = await new Publisher(this.app).generateHtml(markdown + blogFooter, activeView.file);
+      
+      // 모달창 오픈하지 않기 옵션이 활성화되어 있는 경우
       if (tistoryPublishOptions.tistorySkipModal) {
-        this.publishPost(activeView.file, tistoryPublishOptions);
+        this.publishPost(html, activeView.file, tistoryPublishOptions);
         return;
       }
 
       new PublishConfirmModal(this, tistoryPublishOptions, async (publishOptions) => {
-        this.publishPost(activeView.file, publishOptions);
+        this.publishPost(html, activeView.file, publishOptions);
       }).open();
     } catch (error) {
       new Notice((error as Error).toString());
     }
   }
 
-  async publishPost(file: TFile, options: TistoryPublishOptions) {
-    if (!this.#tistoryClient) {
-      new Notice('티스토리 설정에서 [인증하기] 버튼을 눌러주세요.');
-      return;
-    }
-
+  async publishPost(html: string, file: TFile, options: TistoryPublishOptions) {
     try {
+      if (!this.#tistoryClient) {
+        throw new Error('티스토리 설정에서 [인증하기] 버튼을 눌러주세요.');
+      }
+
       new Notice('티스토리에 글을 업로드합니다.');
 
-      const { postId: tistoryPostId, url: tistoryPostUrl } = await this.#tistoryClient.writeOrModifyPost({
+      const { postId, url } = await this.#tistoryClient.writeOrModifyPost({
         blogName: options.tistoryBlogName,
         postId: options.tistoryPostId,
         title: options.tistoryTitle,
         visibility: options.tistoryVisibility,
         category: options.tistoryCategory,
         tag: options.tistoryTags,
-        content: await new Publisher(this.app).generateHtml(file),
+        content: html,
         ...(options.tistoryPublished && {
           published: `${Math.floor(new Date(options.tistoryPublished).getTime() / 1000)}`,
         }),
@@ -160,8 +162,8 @@ export default class TistoryPlugin extends Plugin {
         tistoryCategory: options.tistoryCategory,
         tistorySkipModal: options.tistorySkipModal,
         tistoryPublished: options.tistoryPublished,
-        tistoryPostId,
-        tistoryPostUrl,
+        tistoryPostId: postId,
+        tistoryPostUrl: url,
       });
 
       new Notice('티스토리에 글이 업로드되었습니다.');

@@ -10,10 +10,8 @@ export default class Publisher {
 
   constructor(private readonly app: App) {}
 
-  async generateHtml(file: TFile): Promise<string> {
-    const frontMatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
-    const fileContent = await app.vault.cachedRead(file);
-    let result = fileContent.slice(frontMatter?.position?.end.offset ?? 0);
+  async generateHtml(markdown: string, file: TFile): Promise<string> {
+    let result = markdown;
     result = this.removeObsidianComments(result);
     result = await this.renderDataViews(result);
     result = await this.renderLinksToFullPath(result, file.path);
