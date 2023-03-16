@@ -31,12 +31,11 @@ const PublishConfirm: React.FC<Props> = (props) => {
   const [tistorySkipModal, setTistorySkipModal] = useState<boolean>(options?.tistorySkipModal ?? true); // category: 카테고리 아이디 (기본값: 0)
 
   useEffect(() => {
-    console.log('tistoryVisibility' , tistoryVisibility)
-    if(tistoryVisibility === '0') {
-      setTistoryScheduled('0')
-      setTistoryPublished('')
+    if (tistoryVisibility === '0') {
+      setTistoryScheduled('0');
+      setTistoryPublished('');
     }
-  }, [tistoryVisibility])
+  }, [tistoryVisibility]);
 
   const handleChangeVisibility = (event: ChangeEvent<HTMLInputElement>) => {
     setTistoryVisibility(event.target.value as Post['visibility']);
