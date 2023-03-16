@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.3](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.7.2...0.7.3) (2023-03-16)
+
+
+### Features
+
+* 이미지 width 사용하여 html 렌더링 ([18813cc](https://github.com/anpigon/obsidian-tistory-plugin/commit/18813ccd714336b62ba1fa2dee9072519a133673))
+* hr 태그에 티스토리 style 지정 ([57f9dc5](https://github.com/anpigon/obsidian-tistory-plugin/commit/57f9dc5eb680fd391730f2752f28ca8e3b306f83))
+
+
+### Bug Fixes
+
+* 단락의 개행을 모두 br 태그로 변환 ([6f1c2b7](https://github.com/anpigon/obsidian-tistory-plugin/commit/6f1c2b72cdcbb51795dff5f21f9d684793b62306))
+
 ### [0.7.2](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.7.1...0.7.2) (2023-02-19)
 
 
