@@ -6,7 +6,7 @@ import { escapeHtml } from 'markdown-it/lib/common/utils';
 
 const md = new MarkdownIt({
   html: true,
-  breaks: false,
+  breaks: true,
   linkify: true,
   typographer: true,
   highlight(str, lang, attrs) {
