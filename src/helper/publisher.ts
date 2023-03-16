@@ -139,9 +139,10 @@ export default class Publisher {
         const pathEnd = imageMatch.lastIndexOf(')');
         const imagePath = imageMatch.substring(pathStart, pathEnd);
         if (imagePath.startsWith('http')) {
-          // const [alt, size] = imageName.split('|');
-          // const width = size ? `width="${size}"` : '';
-          // result = result.replace(imageMatch, `<img src="${imagePath}" alt="${alt}" ${width}>`);
+          const [alt, size] = imageName.split('|');
+          if (size) {
+            result = result.replace(imageMatch, `![${alt}](${imagePath}){width=${size}}`);
+          }
         } else {
           const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
           if (linkedFile) {
