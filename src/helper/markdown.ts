@@ -43,6 +43,14 @@ const md = new MarkdownIt({
     closeMarker: '```',
   });
 
+md.renderer.rules.hr = (tokens, idx, options, env, self) => {
+  const token = tokens[idx];
+  token.attrSet('contenteditable', 'false');
+  token.attrSet('data-ke-type', 'horizontalRule');
+  token.attrSet('data-ke-style', 'style6');
+  return self.renderToken(tokens, idx, options);
+};
+
 export function markdownToHtml(markdown: string) {
   return md.render(markdown);
 }
