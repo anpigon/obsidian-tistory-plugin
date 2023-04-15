@@ -68,16 +68,15 @@ export default class Publisher {
           let [linkedFileName, prettyName] = textInsideBrackets.split('|');
 
           prettyName = prettyName || linkedFileName;
-          let headerPath = '';
           if (linkedFileName.includes('#')) {
             const headerSplit = linkedFileName.split('#');
             linkedFileName = headerSplit[0];
-            //currently no support for linking to nested heading with multiple #s
-            headerPath = headerSplit.length > 1 ? `#${headerSplit[1]}` : '';
           }
           const linkedFile = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(linkedFileName), filePath);
           if (!linkedFile) {
-            result = result.replace(linkMatch, `[[${linkedFileName}${headerPath}|${prettyName}]]`);
+            console.log(1, linkedFile, linkedFileName, filePath, linkMatch, result);
+            // 내부 파일 링크가 없는 경우 prettyName만 표시한다.
+            result = result.replace(linkMatch, prettyName);
           }
           if (linkedFile?.extension === 'md') {
             const frontmatter = this.app.metadataCache.getFileCache(linkedFile)?.frontmatter;
@@ -85,10 +84,9 @@ export default class Publisher {
               const { tistoryPostUrl, tistoryTitle } = frontmatter;
               result = result.replace(linkMatch, `<a href="${tistoryPostUrl}">${tistoryTitle || prettyName}</a>`);
             } else {
-              result = result.replace(linkMatch, `[[${prettyName}]]`);
+              // 내부 파일 링크가 tistoryPostUrl이 없는 경우 prettyName만 표시한다.
+              result = result.replace(linkMatch, prettyName);
             }
-            // const extensionlessPath = linkedFile.path.substring(0, linkedFile.path.lastIndexOf('.'));
-            // result = result.replace(linkMatch, `[[${extensionlessPath}${headerPath}|${prettyName}]]`);
           }
         } catch (e) {
           console.log(e);
