@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.4](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.7.3...0.7.4) (2023-04-15)
+
+
+### Code Refactoring
+
+* **publisher.ts:** simplify internal file link display ([ae1e2ac](https://github.com/anpigon/obsidian-tistory-plugin/commit/ae1e2acb74628b7f4b47524e437ab4c54f448543))
+
 ### [0.7.3](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.7.2...0.7.3) (2023-03-16)
 
 
