@@ -78,14 +78,14 @@ export default class Publisher {
             const headerSplit = linkedFileName.split('#');
             linkedFileName = headerSplit[0];
           }
-          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(linkedFileName), filePath);
+          const linkedFile = this.plugin.app.metadataCache.getFirstLinkpathDest(getLinkpath(linkedFileName), filePath);
           if (!linkedFile) {
             console.log(1, linkedFile, linkedFileName, filePath, linkMatch, result);
             // 내부 파일 링크가 없는 경우 prettyName만 표시한다.
             result = result.replace(linkMatch, prettyName);
           }
           if (linkedFile?.extension === 'md') {
-            const frontmatter = this.app.metadataCache.getFileCache(linkedFile)?.frontmatter;
+            const frontmatter = this.plugin.app.metadataCache.getFileCache(linkedFile)?.frontmatter;
             if (frontmatter && 'tistoryPostUrl' in frontmatter) {
               const { tistoryPostUrl, tistoryTitle } = frontmatter;
               result = result.replace(linkMatch, `<a href="${tistoryPostUrl}">${tistoryTitle || prettyName}</a>`);
@@ -111,7 +111,7 @@ export default class Publisher {
   }
 
   async readImageBase64(file: TFile) {
-    return arrayBufferToBase64(await this.app.vault.readBinary(file));
+    return arrayBufferToBase64(await this.plugin.app.vault.readBinary(file));
   }
 
   async createBase64Images(text: string, filePath: string): Promise<string> {
@@ -121,7 +121,7 @@ export default class Publisher {
     for (const imageMatch of transcludedImageMatches) {
       try {
         const [imageName, size] = imageMatch.substring(imageMatch.indexOf('[') + 2, imageMatch.indexOf(']')).split('|');
-        const linkedFile = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(imageName), filePath);
+        const linkedFile = this.plugin.app.metadataCache.getFirstLinkpathDest(getLinkpath(imageName), filePath);
         if (linkedFile) {
           const imageBase64 = await this.readImageBase64(linkedFile);
           const name = size ? `${imageName}|${size}` : imageName;
