@@ -61,8 +61,17 @@ export default class TistoryClient {
   }
 
   async getCategories(blogName: string) {
-    const { item } = await this.get<GetTistoryBlogs>('/category/list', { blogName });
-    return item;
+    const {
+      item: { categories = [] },
+    } = await this.get<GetTistoryBlogs>('/category/list', { blogName });
+    const parents = categories
+      .filter((category) => !category.parent)
+      .sort((a, b) => Number(a.parent) - Number(b.parent));
+    for (const parent of parents) {
+      const children = categories.filter((category) => category.parent === parent.id);
+      parent.children = children;
+    }
+    return parents;
   }
 
   /**

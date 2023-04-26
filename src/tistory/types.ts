@@ -75,6 +75,7 @@ export interface Category {
   parent: string; // 부모 카테고리 ID
   label: string; // 부모 카테고리를 포함한 전체 이름 ('/'로 구분)
   entries: string; // 카테고리내 글 수
+  children?: Category[]; // 하위 카테고리
 }
 
 /** GetTistoryBlogsResponse */

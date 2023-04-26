@@ -83,7 +83,7 @@ const PublishConfirm: React.FC<Props> = (props) => {
       }
 
       // Fetching a list of categories in a blog
-      const { categories = [] } = await tistoryClient.getCategories(tistoryBlogName.current);
+      const categories = await tistoryClient.getCategories(tistoryBlogName.current);
       setCategories(categories);
 
       // To automatically select a category
@@ -130,9 +130,16 @@ const PublishConfirm: React.FC<Props> = (props) => {
           <option value="0">카테고리 없음</option>
           {categories?.map((cate) => {
             return (
-              <option key={cate.id} value={cate.id}>
-                {cate.label}
-              </option>
+              <>
+                <option key={cate.id} value={cate.id}>
+                  {cate.label}
+                </option>
+                {cate.children?.map((child) => (
+                  <option key={child.id} value={child.id}>
+                    {child.label}
+                  </option>
+                ))}
+              </>
             );
           })}
         </select>
