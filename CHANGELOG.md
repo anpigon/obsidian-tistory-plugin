@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.7.4...0.8.0) (2023-04-26)
+
+
+### Features
+
+* **TistoryClient.ts:** add support for fetching and returning child categories ([b739a6b](https://github.com/anpigon/obsidian-tistory-plugin/commit/b739a6b3035bc699a85441899c58f22b4a847ff9))
+* **TistoryPlugin:** add support for Mathjax conversion ([553ad2d](https://github.com/anpigon/obsidian-tistory-plugin/commit/553ad2dac732262682dffef6dba300d66fcbd28c))
+
+
+### Bug Fixes
+
+* **markdown.ts:** add 'code' to the list of skipped HTML tags ([938969a](https://github.com/anpigon/obsidian-tistory-plugin/commit/938969a872030d2f2329447ddffa90a0086f0b39))
+
 ### [0.7.4](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.7.3...0.7.4) (2023-04-15)
 
 
