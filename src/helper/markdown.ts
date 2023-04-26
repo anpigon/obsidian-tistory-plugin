@@ -5,7 +5,7 @@ import MarkdownIt from 'markdown-it';
 import { escapeHtml } from 'markdown-it/lib/common/utils';
 import { TistoryPluginSettings } from '~/types';
 
-const md = new MarkdownIt({
+const md = MarkdownIt({
   html: true,
   breaks: true,
   linkify: true,
@@ -23,6 +23,15 @@ const md = new MarkdownIt({
   .use(require('markdown-it-mark'))
   .use(require('markdown-it-footnote'))
   .use(require('markdown-it-attrs'))
+  // https://github.com/tani/markdown-it-mathjax3/blob/master/index.ts
+  .use(require('markdown-it-mathjax3'), {
+    tex: {
+      inlineMath: [['$', '$']],
+    },
+    options: {
+      skipHtmlTags: { '[-]': ['pre', 'code'] },
+    },
+  })
   .use(require('markdown-it-task-checkbox'), {
     disabled: true,
     divWrap: false,
@@ -50,14 +59,9 @@ export interface MarkdownToHtmlOptions extends MarkdownIt.Options, Pick<TistoryP
 
 export function markdownToHtml(markdown: string, options: MarkdownToHtmlOptions) {
   if (options.useMathjax) {
-    md.use(require('markdown-it-mathjax3'), {
-      tex: {
-        inlineMath: [['$', '$']],
-      },
-      options: {
-        skipHtmlTags: { '[-]': ['pre', 'code'] },
-      },
-    });
+    md.enable(['math_block', 'math_inline']);
+  } else {
+    md.disable(['math_block', 'math_inline']);
   }
   return md.render(markdown);
 }
