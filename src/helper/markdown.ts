@@ -27,7 +27,7 @@ const md = new MarkdownIt({
       inlineMath: [['$', '$']],
     },
     options: {
-      skipHtmlTags: { '[-]': ['pre'] },
+      skipHtmlTags: { '[-]': ['pre', 'code'] },
     },
   })
   .use(require('markdown-it-task-checkbox'), {
