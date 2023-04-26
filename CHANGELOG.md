@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.1](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.0...0.8.1) (2023-04-26)
+
+
+### Code Refactoring
+
+* **markdown.ts:** use MarkdownIt constructor without object destructuring ([46328b4](https://github.com/anpigon/obsidian-tistory-plugin/commit/46328b447efb047ec464a893b2c38b2fb49fa44e))
+
 ## [0.8.0](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.7.4...0.8.0) (2023-04-26)
 
 
