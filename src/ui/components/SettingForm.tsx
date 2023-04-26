@@ -4,6 +4,7 @@ import TistoryPlugin from '~/TistoryPlugin';
 import SettingItem from './SettingItem';
 import { TistoryAuthStorage } from '~/helper/storage';
 import { Blog } from '~/tistory/types';
+import classNames from '~/helper/classNames';
 
 type Props = {
   plugin: TistoryPlugin;
@@ -15,6 +16,7 @@ const SettingForm: React.FC<Props> = ({ plugin, loggedIn, onAuth }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(loggedIn);
   const [selectedBlog, setSelectedBlog] = useState('');
   const [blogs, setBlogs] = useState<Blog[]>();
+  const [useMathjax, setUseMathjax] = useState(plugin.settings.useMathjax);
 
   const handleLogin = () => {
     // 인증을 시도하고 인증 성공 여부을 콜백 함수로 받는다.
@@ -91,14 +93,40 @@ const SettingForm: React.FC<Props> = ({ plugin, loggedIn, onAuth }) => {
               })}
             </select>
           </SettingItem>
-
-          <SettingItem name="푸터" description="모든 글 하단에 나타납니다.">
-            <textarea name="contentFooter" rows={8} cols={50} spellCheck={false} 
-            defaultValue={plugin.settings.blogFooter || ''}
-            onChange={(event) => {
-              plugin.settings.blogFooter = event.target.value;
-              plugin.saveSettings()
-            }} />
+          <SettingItem
+            name="Mathjax 수식 변환"
+            description={
+              <>
+                Mathjax 수식은 이미지로 변환됩니다.
+                <br />
+                만약 티스토리 스킨에서 MathJax 변환 기능을 사용 중이라면, 이를 비활성화해야 합니다.
+              </>
+            }
+          >
+            <div
+              className={classNames('checkbox-container', { 'is-enabled': useMathjax })}
+              onClick={() => {
+                plugin.settings.useMathjax = !plugin.settings.useMathjax;
+                plugin.saveSettings();
+                setUseMathjax(plugin.settings.useMathjax);
+              }}
+            >
+              <input type="checkbox" />
+            </div>
+          </SettingItem>
+          <SettingItem name="푸터" description="글을 발행할 때 하단에 자동으로 등록됩니다.">
+            <textarea
+              name="contentFooter"
+              rows={8}
+              cols={50}
+              spellCheck={false}
+              defaultValue={plugin.settings.blogFooter || ''}
+              placeholder='티스토리 푸터를 입력하세요. (ex: "이 글은 티스토리 블로그에서 작성되었습니다.")'
+              onChange={(event) => {
+                plugin.settings.blogFooter = event.target.value;
+                plugin.saveSettings();
+              }}
+            />
           </SettingItem>
         </>
       )}

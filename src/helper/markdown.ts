@@ -3,6 +3,7 @@
 // ref: https://github.com/markdown-it/markdown-it
 import MarkdownIt from 'markdown-it';
 import { escapeHtml } from 'markdown-it/lib/common/utils';
+import { TistoryPluginSettings } from '~/types';
 
 const md = new MarkdownIt({
   html: true,
@@ -22,14 +23,6 @@ const md = new MarkdownIt({
   .use(require('markdown-it-mark'))
   .use(require('markdown-it-footnote'))
   .use(require('markdown-it-attrs'))
-  .use(require('markdown-it-mathjax3'), {
-    tex: {
-      inlineMath: [['$', '$']],
-    },
-    options: {
-      skipHtmlTags: { '[-]': ['pre', 'code'] },
-    },
-  })
   .use(require('markdown-it-task-checkbox'), {
     disabled: true,
     divWrap: false,
@@ -51,6 +44,20 @@ md.renderer.rules.hr = (tokens, idx, options, env, self) => {
   return self.renderToken(tokens, idx, options);
 };
 
-export function markdownToHtml(markdown: string) {
+export interface MarkdownToHtmlOptions extends MarkdownIt.Options, Pick<TistoryPluginSettings, 'useMathjax'> {
+  skipHtmlTags?: { [key: string]: string[] };
+}
+
+export function markdownToHtml(markdown: string, options: MarkdownToHtmlOptions) {
+  if (options.useMathjax) {
+    md.use(require('markdown-it-mathjax3'), {
+      tex: {
+        inlineMath: [['$', '$']],
+      },
+      options: {
+        skipHtmlTags: { '[-]': ['pre', 'code'] },
+      },
+    });
+  }
   return md.render(markdown);
 }

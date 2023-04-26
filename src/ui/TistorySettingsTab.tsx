@@ -10,7 +10,9 @@ import type { TistoryPluginSettings } from '~/types';
 import SettingForm from './components/SettingForm';
 import TistoryAuthModal from './components/TistoryAuthModal';
 
-export const DEFAULT_SETTINGS: TistoryPluginSettings = {};
+export const DEFAULT_SETTINGS: TistoryPluginSettings = {
+  useMathjax: true,
+}; 
 
 export default class TistorySettingTab extends PluginSettingTab {
   #authModal?: TistoryAuthModal;

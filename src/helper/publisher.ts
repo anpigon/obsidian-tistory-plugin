@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { App, arrayBufferToBase64, getLinkpath, Notice, TFile } from 'obsidian';
+import { arrayBufferToBase64, getLinkpath, Notice, TFile } from 'obsidian';
+import TistoryPlugin from '~/TistoryPlugin';
 import { markdownToHtml } from './markdown';
 
 export default class Publisher {
@@ -8,15 +9,20 @@ export default class Publisher {
   codeBlockRegex = /```.*?\n[\s\S]+?```/g;
   excaliDrawRegex = /:\[\[(\d*?,\d*?)\],.*?\]\]/g;
 
-  constructor(private readonly app: App) {}
+  constructor(private readonly plugin: TistoryPlugin) {}
 
   async generateHtml(markdown: string, file: TFile): Promise<string> {
     let result = markdown;
+    if (this.plugin.settings.blogFooter) {
+      result += `\n${this.plugin.settings.blogFooter}`;
+    }
     result = this.removeObsidianComments(result);
     result = await this.renderDataViews(result);
     result = await this.renderLinksToFullPath(result, file.path);
     result = await this.createBase64Images(result, file.path);
-    result = markdownToHtml(result);
+    result = markdownToHtml(result, {
+      useMathjax: this.plugin.settings.useMathjax,
+    });
     return result;
   }
 
@@ -142,7 +148,7 @@ export default class Publisher {
             result = result.replace(imageMatch, `![${alt}](${imagePath}){width=${size}}`);
           }
         } else {
-          const linkedFile = this.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
+          const linkedFile = this.plugin.app.metadataCache.getFirstLinkpathDest(imagePath, filePath);
           if (linkedFile) {
             const imageBase64 = await this.readImageBase64(linkedFile);
             const imageMarkdown = `![${imageName}](data:image/${this.getExtension(linkedFile)};base64,${imageBase64})`;
