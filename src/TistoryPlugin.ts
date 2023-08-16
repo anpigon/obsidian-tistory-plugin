@@ -100,7 +100,8 @@ export default class TistoryPlugin extends Plugin {
     try {
       // get frontmatter in fileContent
       const frontmatter = this.app.metadataCache.getFileCache(activeView.file)?.frontmatter;
-      const markdown = fileContent.slice(frontmatter?.position?.end.offset ?? 0).trim();
+      const frontmatterPosition = this.app.metadataCache.getFileCache(activeView.file)?.frontmatterPosition;
+      const markdown = fileContent.slice(frontmatterPosition?.end.offset ?? 0).trim();
       const tags = parseFrontMatterTags(frontmatter)
         ?.map((tag) => tag.replace(/^#/, ''))
         ?.join(',');
@@ -178,11 +179,14 @@ export default class TistoryPlugin extends Plugin {
 
   async updateFile(file: TFile, addFrontMatter: Record<string, string | number | boolean | undefined>): Promise<void> {
     const fileContent = await app.vault.cachedRead(file);
-    const cachedFrontMatter = { ...this.app.metadataCache.getFileCache(file)?.frontmatter };
-    const hasCachedFrontMatter = 'position' in cachedFrontMatter;
+    const fileCache = this.app.metadataCache.getFileCache(file);
+    const cachedFrontMatter = { ...fileCache?.frontmatter };
+    const frontMatterPosition = fileCache?.frontmatterPosition;
+
+    const hasCachedFrontMatter = Object.keys(cachedFrontMatter).length > 0;
 
     const contentBody = hasCachedFrontMatter
-      ? fileContent.slice((cachedFrontMatter.position?.end.offset ?? 0) + 1)
+      ? fileContent.slice((frontMatterPosition?.end.offset ?? 0) + 1)
       : fileContent;
     delete cachedFrontMatter['position'];
 
