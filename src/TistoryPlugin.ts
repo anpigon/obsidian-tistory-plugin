@@ -188,7 +188,6 @@ export default class TistoryPlugin extends Plugin {
     const contentBody = hasCachedFrontMatter
       ? fileContent.slice((frontMatterPosition?.end.offset ?? 0) + 1)
       : fileContent;
-    delete cachedFrontMatter['position'];
 
     const newFrontMatter = {
       ...cachedFrontMatter,
