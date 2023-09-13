@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.4](https://github.com/GoBeromsu/obsidian-tistory-plugin/compare/0.8.3...0.8.4) (2023-09-13)
+
 ### [0.8.3](https://github.com/GoBeromsu/obsidian-tistory-plugin/compare/0.8.2...0.8.3) (2023-09-13)
 
 ### [0.8.2](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.1...0.8.2) (2023-04-26)
