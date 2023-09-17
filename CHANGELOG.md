@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.4](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.3...0.8.4) (2023-09-17)
+
+
+### Bug Fixes
+
+* **utils.ts:** update setActiveLeaf function call to pass an object with the focus property set to false to prevent the leaf from gaining focus when opening a file ([9811773](https://github.com/anpigon/obsidian-tistory-plugin/commit/981177381fbb77efefdc4bbf33bc2e88ba390f4a))
+
 ### [0.8.3](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.2...0.8.3) (2023-09-17)
 
 
