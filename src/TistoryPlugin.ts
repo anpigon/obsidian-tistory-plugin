@@ -104,6 +104,10 @@ export default class TistoryPlugin extends Plugin {
       const tags = parseFrontMatterTags(frontmatter)
         ?.map((tag) => tag.replace(/^#/, ''))
         ?.join(',');
+      console.log('fileContent', fileContent);
+      console.log('frontmatter', frontmatter);
+      console.log('markdown', markdown);
+      console.log('tags', tags);
 
       const tistoryPublishOptions: TistoryPublishOptions = {
         tistoryBlogName: frontmatter?.tistoryBlogName || TistoryAuthStorage.getDefaultBlogId() || '',
