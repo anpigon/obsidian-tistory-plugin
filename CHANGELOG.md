@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.3](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.2...0.8.3) (2023-09-17)
+
+
+### Bug Fixes
+
+* **TistoryPlugin.ts:** handle case when activeView.file is null or undefined to prevent errors ([6cc1f47](https://github.com/anpigon/obsidian-tistory-plugin/commit/6cc1f4759f42a82944df02c20e508631f35511b2))
+
+
+### Code Refactoring
+
+* **PublishConfirmModal.tsx:** reorganize imports for better readability and consistency ([d76bf7b](https://github.com/anpigon/obsidian-tistory-plugin/commit/d76bf7b6697eb62f9c3639d71380c62a1e82122c))
+* **TistoryPlugin.ts:** remove empty keys from newFrontMatter object before modifying file content ([33c1807](https://github.com/anpigon/obsidian-tistory-plugin/commit/33c1807a6e41446523723be03d0edac276c32b59))
+
 ### [0.8.2](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.1...0.8.2) (2023-04-26)
 
 
