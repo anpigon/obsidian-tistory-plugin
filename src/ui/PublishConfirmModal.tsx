@@ -1,11 +1,11 @@
-import React from 'react';
-import { createRoot, Root } from 'react-dom/client';
 import { Modal } from 'obsidian';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 
-import PublishConfirm from '~/ui/components/PublishConfirm';
-import TistoryPlugin from '~/TistoryPlugin';
-import { UpdatePostParams } from '~/tistory/types';
 import ReactDOM from 'react-dom';
+import { UpdatePostParams } from '~/tistory/types';
+import TistoryPlugin from '~/TistoryPlugin';
+import PublishConfirm from '~/ui/components/PublishConfirm';
 
 export interface TistoryPublishOptions {
   tistoryBlogName: UpdatePostParams['blogName'];
@@ -40,7 +40,7 @@ export class PublishConfirmModal extends Modal {
   async onOpen() {
     const { contentEl, titleEl } = this;
     titleEl.createEl('h2', { text: '티스토리 글 발행' });
-    contentEl.classList.add('tistory')
+    contentEl.classList.add('tistory');
     createRoot(contentEl).render(
       <PublishConfirm
         plugin={this.plugin}
