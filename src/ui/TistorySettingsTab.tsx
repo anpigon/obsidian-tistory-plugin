@@ -12,7 +12,7 @@ import TistoryAuthModal from './components/TistoryAuthModal';
 
 export const DEFAULT_SETTINGS: TistoryPluginSettings = {
   useMathjax: true,
-}; 
+};
 
 export default class TistorySettingTab extends PluginSettingTab {
   #authModal?: TistoryAuthModal;
