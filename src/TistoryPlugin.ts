@@ -192,6 +192,12 @@ export default class TistoryPlugin extends Plugin {
       ...frontMatter,
       ...addFrontMatter,
     };
+    // newFrontMatter의 값이 없는 경우, 해당 키를 삭제한다.
+    Object.keys(newFrontMatter).forEach((key) => {
+      if (!newFrontMatter[key]) {
+        delete newFrontMatter[key];
+      }
+    });
     const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---\n${contentBody}`;
     return await this.app.vault.modify(file, newFileContent);
   }
