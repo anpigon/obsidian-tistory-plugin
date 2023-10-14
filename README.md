@@ -9,17 +9,27 @@
 옵시디언 에디터에서 티스토리에 글을 등록하고 수정할 수 있습니다.
 <br>아직 개발 중인 앱입니다. 버그나 개선사항이 있다면 [Issues](https://github.com/anpigon/obsidian-tistory-plugin/issues)에 남겨주세요.
 
+You can create and edit posts on Tistory from the Obsidian Editor.
+<br>This app is still in development. If you have any bugs or improvements, please leave them in [Issues](https://github.com/anpigon/obsidian-tistory-plugin/issues).
 <br>
 
 ## ☕️ 후원하기
 
 커피 한 잔의 값으로 개발을 지원할 수 있습니다.
+<br>You can support development for the price of a cup of coffee.
 
-<a href="https://www.buymeacoffee.com/anpigon" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=anpigon&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a> <a href="https://anpigon.github.io/buymeacoffee/">[카카오페이로 후원하기]</a>
+<a href="https://www.buymeacoffee.com/anpigon" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=anpigon&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a> 
+<br><a href="https://anpigon.github.io/buymeacoffee/">[카카오페이로 후원하기]</a>
+<a href="https://toss.me/anpigon/">[토스페이로 후원하기]</a>
 
 <br>
 
 ## 📍 Changelog
+
+### v0.8.4
+
+- 일부 매타태그 삽입되는 버그 수정
+- 기타 코드 개선
 
 ### v0.7.2
 
