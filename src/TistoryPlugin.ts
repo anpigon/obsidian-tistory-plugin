@@ -179,7 +179,7 @@ export default class TistoryPlugin extends Plugin {
   }
 
   async updateFile(file: TFile, addFrontMatter: Record<string, string | number | boolean | undefined>): Promise<void> {
-    const fileContent = await app.vault.cachedRead(file);
+    const fileContent = await this.app.vault.cachedRead(file);
     const fileCache = this.app.metadataCache.getFileCache(file);
     const cachedFrontMatter = { ...fileCache?.frontmatter };
     const frontMatterPosition = fileCache?.frontmatterPosition;
@@ -191,7 +191,7 @@ export default class TistoryPlugin extends Plugin {
       : fileContent;
 
     const newFrontMatter = {
-      ...frontMatter,
+      ...cachedFrontMatter,
       ...addFrontMatter,
     };
     // newFrontMatter의 값이 없는 경우, 해당 키를 삭제한다.

@@ -80,7 +80,6 @@ export default class Publisher {
           }
           const linkedFile = this.plugin.app.metadataCache.getFirstLinkpathDest(getLinkpath(linkedFileName), filePath);
           if (!linkedFile) {
-            console.log(1, linkedFile, linkedFileName, filePath, linkMatch, result);
             // 내부 파일 링크가 없는 경우 prettyName만 표시한다.
             result = result.replace(linkMatch, prettyName);
           }
