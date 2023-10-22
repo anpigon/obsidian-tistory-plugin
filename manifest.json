@@ -3,7 +3,7 @@
   "name": "Tistory",
   "version": "0.8.4",
   "minAppVersion": "1.4.5",
-  "description": "A plugin for publishing Obsidian documents to Tistory.",
+  "description": "Publish your notes to the Tistory blog.",
   "author": "anpigon",
   "authorUrl": "https://anpigon.tistory.com",
   "isDesktopOnly": false,
