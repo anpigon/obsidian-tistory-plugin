@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.5](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.4...0.8.5) (2023-10-22)
+
+
+### Code Refactoring
+
+* **TistoryPlugin.ts:** rename command id from 'tistory-publish' to 'publish' for better consistency and clarity ([34ffedc](https://github.com/anpigon/obsidian-tistory-plugin/commit/34ffedc287708e1f1c0a5a5818a09aa1c1e8cf00))
+
 ### [0.8.4](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.3...0.8.4) (2023-09-17)
 
 

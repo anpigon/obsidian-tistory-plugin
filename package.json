@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-tistory-plugin",
-	"version": "0.8.4",
+	"version": "0.8.5",
 	"description": "A plugin for publishing Obsidian documents to Tistory.",
 	"main": "main.js",
 	"author": "anpigon",
