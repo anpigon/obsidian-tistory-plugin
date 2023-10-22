@@ -1,7 +1,7 @@
 {
   "id": "tistory",
   "name": "Tistory",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "minAppVersion": "1.4.5",
   "description": "Publish your notes to the Tistory blog.",
   "author": "anpigon",
