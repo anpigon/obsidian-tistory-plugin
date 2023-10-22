@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.6](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.5...0.8.6) (2023-10-22)
+
+
+### Code Refactoring
+
+* **TistoryPlugin.ts:** change variable name 'app' to 'this.app' for consistency and clarity ([76fe10c](https://github.com/anpigon/obsidian-tistory-plugin/commit/76fe10c33a4ad664ac4f9d5e29c701adc6709146))
+
 ### [0.8.5](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.4...0.8.5) (2023-10-22)
 
 
