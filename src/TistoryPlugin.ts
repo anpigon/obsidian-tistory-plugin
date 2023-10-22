@@ -53,7 +53,7 @@ export default class TistoryPlugin extends Plugin {
     await this.loadSettings();
 
     this.addCommand({
-      id: 'tistory-publish',
+      id: 'publish',
       name: 'Publish to Tistory',
       callback: () => {
         this.publishTistory();
