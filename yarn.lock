@@ -836,10 +836,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/codemirror@0.0.108":
-  version "0.0.108"
-  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.108.tgz#e640422b666bf49251b384c390cdeb2362585bde"
-  integrity sha512-3FGFcus0P7C2UOGCNUVENqObEb4SFk+S8Dnxq7K6aIsLVs/vDtlangl3PEO0ykaKXyK56swVF6Nho7VsA44uhw==
+"@types/codemirror@5.60.8":
+  version "5.60.8"
+  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-5.60.8.tgz#b647d04b470e8e1836dd84b2879988fc55c9de68"
+  integrity sha512-VjFgDF/eB+Aklcy15TtOTLQeMjTo07k7KAjql8OK5Dirr7a6sJY4T1uVBDuTVG9VEmn1uUsohOpYnVfgC6/jyw==
   dependencies:
     "@types/tern" "*"
 
@@ -4301,12 +4301,12 @@ object.assign@^4.1.4:
     has-symbols "^1.0.3"
     object-keys "^1.1.1"
 
-obsidian@latest:
-  version "0.15.9"
-  resolved "https://registry.yarnpkg.com/obsidian/-/obsidian-0.15.9.tgz#b6e0b566952643db6b55f7e74fbba6d7140fe4a2"
-  integrity sha512-w3JL/IM3/U61rjFSFIFDSv+pcHn3mH1EIRN40kBkC/lGYqjFSPbr6daQe08QkskBz/GAYIeBoaKQIcgU9vV3LQ==
+obsidian@^1.4.11:
+  version "1.4.11"
+  resolved "https://registry.yarnpkg.com/obsidian/-/obsidian-1.4.11.tgz#5cba594c83a74ebad58b630c610265018abdadaa"
+  integrity sha512-BCVYTvaXxElJMl6MMbDdY/CGK+aq18SdtDY/7vH8v6BxCBQ6KF4kKxL0vG9UZ0o5qh139KpUoJHNm+6O5dllKA==
   dependencies:
-    "@types/codemirror" "0.0.108"
+    "@types/codemirror" "5.60.8"
     moment "2.29.4"
 
 once@^1.3.0:

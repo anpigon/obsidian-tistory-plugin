@@ -53,7 +53,7 @@ export default class TistoryPlugin extends Plugin {
     await this.loadSettings();
 
     this.addCommand({
-      id: 'tistory-publish',
+      id: 'publish',
       name: 'Publish to Tistory',
       callback: () => {
         this.publishTistory();
@@ -86,12 +86,12 @@ export default class TistoryPlugin extends Plugin {
     }
 
     const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-    if (!activeView) {
+    if (!activeView || !activeView.file) {
       new Notice('열려있는 노트가 없습니다. 파일을 열고 다시 시도해주세요.'); // No file is open/active. Please open a file and try again.
       return;
     }
 
-    const fileContent = await app.vault.cachedRead(activeView.file);
+    const fileContent = await this.app.vault.cachedRead(activeView.file);
     if (fileContent !== activeView.data) {
       new Notice('파일의 변경사항이 저장되지 않았습니다. 파일을 저장하고 다시 시도해주세요.');
       return;
@@ -99,8 +99,9 @@ export default class TistoryPlugin extends Plugin {
 
     try {
       // get frontmatter in fileContent
-      const frontmatter = this.app.metadataCache.getFileCache(activeView.file)?.frontmatter;
-      const frontmatterPosition = this.app.metadataCache.getFileCache(activeView.file)?.frontmatterPosition;
+      const fileCache = this.app.metadataCache.getFileCache(activeView.file);
+      const frontmatter = fileCache?.frontmatter;
+      const frontmatterPosition = fileCache?.frontmatterPosition;
       const markdown = fileContent.slice(frontmatterPosition?.end.offset ?? 0).trim();
       const tags = parseFrontMatterTags(frontmatter)
         ?.map((tag) => tag.replace(/^#/, ''))
@@ -126,7 +127,7 @@ export default class TistoryPlugin extends Plugin {
       }
 
       new PublishConfirmModal(this, tistoryPublishOptions, async (publishOptions) => {
-        this.publishPost(html, activeView.file, publishOptions);
+        this.publishPost(html, activeView.file!, publishOptions);
       }).open();
     } catch (error) {
       new Notice((error as Error).toString());
@@ -190,9 +191,15 @@ export default class TistoryPlugin extends Plugin {
       : fileContent;
 
     const newFrontMatter = {
-      ...cachedFrontMatter,
+      ...frontMatter,
       ...addFrontMatter,
     };
+    // newFrontMatter의 값이 없는 경우, 해당 키를 삭제한다.
+    Object.keys(newFrontMatter).forEach((key) => {
+      if (!newFrontMatter[key]) {
+        delete newFrontMatter[key];
+      }
+    });
     const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---\n${contentBody}`;
     return await this.app.vault.modify(file, newFileContent);
   }

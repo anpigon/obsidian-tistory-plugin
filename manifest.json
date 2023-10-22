@@ -1,10 +1,13 @@
 {
-	"id": "tistory",
-	"name": "Tistory",
-	"version": "0.8.4",
-	"minAppVersion": "0.15.0",
-	"description": "A plugin for publishing Obsidian documents to Tistory.",
-	"author": "anpigon",
-	"authorUrl": "https://anpigon.tistory.com",
-	"isDesktopOnly": false
+  "id": "tistory",
+  "name": "Tistory",
+  "version": "0.8.5",
+  "minAppVersion": "1.4.5",
+  "description": "Publish your notes to the Tistory blog.",
+  "author": "anpigon",
+  "authorUrl": "https://anpigon.tistory.com",
+  "isDesktopOnly": false,
+  "fundingUrl": {
+    "Buy Me a Coffee": "https://www.buymeacoffee.com/anpigon"
+  }
 }
