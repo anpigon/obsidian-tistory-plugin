@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.7](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.6...0.8.7) (2023-12-10)
+
+
+### Features
+
+* **utils.ts:** add removeFrontmatter function to extract frontmatter from markdown content ([cf325f1](https://github.com/anpigon/obsidian-tistory-plugin/commit/cf325f1d51009ab49746b9e9f2e42a09e25775a7))
+
+
+### Bug Fixes
+
+* **TistoryPlugin.ts:** fix method call to read file content from vault to prevent using outdated cache ([c359d09](https://github.com/anpigon/obsidian-tistory-plugin/commit/c359d09c07132df63a5720b557dfb6c50454fbc8))
+* **TistoryPlugin.ts:** refactor updateFile method to improve readability and maintainability ([39d60f1](https://github.com/anpigon/obsidian-tistory-plugin/commit/39d60f1c10c706b3393104947b62c0cced378dd9))
+* **utils.ts:** import FrontMatterCache from 'obsidian' to fix missing import error ([c923194](https://github.com/anpigon/obsidian-tistory-plugin/commit/c923194d8d9ddf8936e6786ddeb352e3f3994d68))
+
 ### [0.8.6](https://github.com/anpigon/obsidian-tistory-plugin/compare/0.8.5...0.8.6) (2023-10-22)
 
 
