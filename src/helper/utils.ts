@@ -1,4 +1,4 @@
-import { App, TFile } from 'obsidian';
+import { App, FrontMatterCache, TFile } from 'obsidian';
 
 export const openFile = (props: { file: TFile; app: App; isNewLeaf: boolean }) => {
   const { file, app, isNewLeaf } = props;
@@ -25,4 +25,25 @@ export const removeFrontmatter = (markdownContent: string) => {
     // No frontmatter found
     return { frontmatterString: '', contentWithoutFrontmatter: markdownContent };
   }
+};
+
+// 내용에서 프론트매터를 제거하는 함수
+export const extractContentBody = (fileContent: string): string => {
+  const { contentWithoutFrontmatter } = removeFrontmatter(fileContent);
+  return contentWithoutFrontmatter;
+};
+
+// 새로운 프론트매터를 생성하는 함수
+export const createNewFrontMatter = (
+  existingFrontMatter: FrontMatterCache,
+  additions: FrontMatterCache,
+): FrontMatterCache => {
+  const newFrontMatter = { ...existingFrontMatter, ...additions };
+  // 값이 없는 키 삭제
+  Object.entries(newFrontMatter).forEach(([key, value]) => {
+    if (!value) {
+      delete newFrontMatter[key];
+    }
+  });
+  return newFrontMatter;
 };
