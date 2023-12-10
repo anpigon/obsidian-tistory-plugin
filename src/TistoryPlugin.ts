@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   App,
+  FrontMatterCache,
   MarkdownView,
   Notice,
   parseFrontMatterTags,
@@ -17,6 +18,7 @@ import TistoryError from '~/tistory/TistoryError';
 import { TistoryPluginSettings } from '~/types';
 import { PublishConfirmModal, TistoryPublishOptions } from '~/ui/PublishConfirmModal';
 import TistorySettingTab, { DEFAULT_SETTINGS } from '~/ui/TistorySettingsTab';
+import { createNewFrontMatter, extractContentBody } from './helper/utils';
 
 export default class TistoryPlugin extends Plugin {
   #settings: TistoryPluginSettings | null;
@@ -178,29 +180,20 @@ export default class TistoryPlugin extends Plugin {
     }
   }
 
-  async updateFile(file: TFile, addFrontMatter: Record<string, string | number | boolean | undefined>): Promise<void> {
+  // 프론트매터 처리 함수
+  async processFrontMatter(file: TFile): Promise<FrontMatterCache> {
+    return new Promise((resolve) => this.app.fileManager.processFrontMatter(file, resolve));
+  }
+
+  // 파일 업데이트 메소드
+  async updateFile(file: TFile, addFrontMatter: FrontMatterCache): Promise<void> {
     const fileContent = await this.app.vault.read(file);
-    const fileCache = this.app.metadataCache.getFileCache(file);
-    const cachedFrontMatter = { ...fileCache?.frontmatter };
-    const frontMatterPosition = fileCache?.frontmatterPosition;
-
-    const hasCachedFrontMatter = Object.keys(cachedFrontMatter).length > 0;
-
-    const contentBody = hasCachedFrontMatter
-      ? fileContent.slice((frontMatterPosition?.end.offset ?? 0) + 1)
-      : fileContent;
-
-    const newFrontMatter = {
-      ...cachedFrontMatter,
-      ...addFrontMatter,
-    };
-    // newFrontMatter의 값이 없는 경우, 해당 키를 삭제한다.
-    Object.keys(newFrontMatter).forEach((key) => {
-      if (!newFrontMatter[key]) {
-        delete newFrontMatter[key];
-      }
-    });
+    const frontMatter = await this.processFrontMatter(file);
+    const contentBody = extractContentBody(fileContent);
+    const newFrontMatter = createNewFrontMatter(frontMatter, addFrontMatter);
     const newFileContent = `---\n${stringifyYaml(newFrontMatter)}---\n${contentBody}`;
+
+    // 전체 내용을 파일에 쓴다.
     return await this.app.vault.modify(file, newFileContent);
   }
 }
