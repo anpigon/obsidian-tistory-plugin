@@ -179,7 +179,7 @@ export default class TistoryPlugin extends Plugin {
   }
 
   async updateFile(file: TFile, addFrontMatter: Record<string, string | number | boolean | undefined>): Promise<void> {
-    const fileContent = await this.app.vault.cachedRead(file);
+    const fileContent = await this.app.vault.read(file);
     const fileCache = this.app.metadataCache.getFileCache(file);
     const cachedFrontMatter = { ...fileCache?.frontmatter };
     const frontMatterPosition = fileCache?.frontmatterPosition;
