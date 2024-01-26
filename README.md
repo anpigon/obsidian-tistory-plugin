@@ -6,6 +6,13 @@
 ![License](https://img.shields.io/github/license/anpigon/obsidian-tistory-plugin?style=flat-square)
 ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fanpigon%2Fobsidian-tistory-plugin&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true)
 
+<br>
+
+> 이 플러그인은 티스토리 OpenAPI 종료 예정에 따라 2월 말까지만 사용이 가능합니다.<br>
+> 관련 글: [[안내] 티스토리 Open API 종료 안내](https://notice.tistory.com/2664)
+
+<br>
+
 옵시디언 에디터에서 티스토리에 글을 등록하고 수정할 수 있습니다.
 <br>아직 개발 중인 앱입니다. 버그나 개선사항이 있다면 [Issues](https://github.com/anpigon/obsidian-tistory-plugin/issues)에 남겨주세요.
 
